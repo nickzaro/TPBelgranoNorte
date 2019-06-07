@@ -1,9 +1,9 @@
-
+const {Posicion} = require('./Posicion');
 class Movil {
-    constructor(id, nombre, posicion) {
-        this.id = id;
-        this.nombre = nombre;
-        this.posicion = posicion;
+    constructor(movilObj) {
+        this.id = movilObj.id;
+        this.nombre = movilObj.nombre;
+        this.posicion = new Posicion(movilObj.posicion);
     }
     getPosicion() {
         return this.posicion;
@@ -14,6 +14,7 @@ class Movil {
     getNombre() {
         return this.nombre;
     }
+    //trasforma el movil a movilRaw para enviar
     empaquetarParaEnviar(){
         return {
             'id': this.id,
@@ -21,6 +22,14 @@ class Movil {
             'posicion': this.posicion.empaquetarParaEnviar()
 
         };
+    }
+    compararMovil(m2){
+        return (this.getID()==m2.getID() && this.getNombre()==m2.getNombre() 
+        && this.getPosicion().compararPosicion(m2.getPosicion()));
+    }
+    compararMovilRaw(m2Raw){
+        return (this.getID()==m2Raw.id && this.getNombre()==m2Raw.nombre 
+        && this.getPosicion().compararPosicionRaw(m2Raw.posicion));
     }
 
 }

@@ -1,7 +1,8 @@
 class Posicion {
-    constructor(lat, lng) {
-        this.lat = lat;
-        this.lng = lng;
+    constructor(posicionObj) {
+        console.log(posicionObj);
+        this.lat = posicionObj[0];
+        this.lng = posicionObj[1];
     }
     multiplicarPor(numero) {
         this.lat *= numero;
@@ -22,15 +23,16 @@ class Posicion {
         this.lng -= posicion.lng;
     }
     empaquetarParaEnviar() {
-        return {
-            "lat": this.lat,
-            "lng": this.lng
-        };
+        return [ this.lat,this.lng];
     }
-    compararPaquetes(pa2){
-        let pa1=empaquetarParaEnviar();
-        return (pa1.lat ===pa2.lat && pa1.lng === pa2.lng);
+    // otra posicion del mismo tipo de la clase
+    compararPosicion(pa2){
+        return (this.lat ===pa2.lat && this.lng === pa2.lng);
     }
+    compararPosicionRaw(pa2){
+        return (this.lat ===pa2[0] && this.lng === pa2[1]);
+    } 
+
 }
 module.exports = {
     Posicion

@@ -1,24 +1,25 @@
-const { Movil} = require('./primitivos/movil');
-const {Posicion} = require('./primitivos/Posicion');
+const { Movil } = require('./primitivos/movil');
+const { Posicion } = require('./primitivos/Posicion');
 // const Parametros = require('../utilidades/parametros');
 
 class Representante extends Movil {
-    constructor(id, nombre) { //numeroFormacion,PoolFormacion,posicion
-        super(id, nombre, new Posicion(0.0, 0.0));
+    constructor(rep) { //numeroFormacion,PoolFormacion,posicion
+
+        super(rep);
         this.cantidad = 0;
         this.pasajeros = [];
     }
 
-//enpaquetamos los datos para poder ser enviado a los clientes
+    //enpaquetamos los datos para poder ser enviado a los clientes
     empaquetarParaEnviar() {
         return {
             id: this.id,
             nombre: this.nombre,
-            posicion: this.representaAlPool().empaquetarParaEnviar(),
+            posicion: this.calcularRepresentante().empaquetarParaEnviar(),
             cantidad: this.cantidad
         }
     }
-    
+
     compararPaquetes(pa2) {
         let pa1 = empaquetarParaEnviar();
         return (pa1.id === pa2.id && pa1.nombre === pa2.nombre
@@ -42,13 +43,13 @@ class Representante extends Movil {
         this.pasajeros = this.pasajeros.filter(p => p.id != pasajero.id);
     }
 
-    representaAlPool() {
-        let posicion = new Posicion(0.0, 0.0);
+    //actualiza el representante de acuerdo a los clientes que tiene
+    calcularRepresentante() {
         for (let persona of this.pasajeros) {
-            posicion.sumarPosicion(persona.posicion);
+            this.posicion.sumarPosicion(persona.posicion);
         }
-        posicion.dividirEntre(this.pasajeros.length)
-        return posicion;
+        this.posicion.dividirEntre(this.pasajeros.length)
+        return this.posicion;
     }
 
     verificarPosicionPersona(pasajero) {

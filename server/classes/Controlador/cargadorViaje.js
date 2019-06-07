@@ -20,7 +20,7 @@ class CargadorViaje {
             //console.log("ooooooooooooooooooooooo");
             this.recorridos.set(i++, funcion(element));
         });
-        console.log(this.recorridos.size);
+        //console.log(this.recorridos.size);
 
     }
     cargarViajeVuelta(recorrido) {

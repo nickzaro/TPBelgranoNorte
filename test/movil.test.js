@@ -1,36 +1,39 @@
-const { Movil, Posicion } = require('./../server/classes/movil');
+const { Posicion } = require('./../server/classes/Modelo/primitivos/Posicion')
+const { Movil } = require('./../server/classes/Modelo/primitivos/movil');
 const expect = require('chai').expect;
 
-describe('Test para la Clase Posicion', () => {
-    it('funcion multiplicarPor', () => {
-        let posicion = new Posicion(1.0, 5.0);
-        posicion.multiplicarPor(10);
-        expect(posicion.lat).to.equal(10.0);
-        expect(posicion.lng).to.equal(50.0);
-    }
-    )
-    it('funcion dividirEntre', () => {
-        let posicion = new Posicion(10.0, 50.0);
-        posicion.dividirEntre(10);
-        expect(posicion.lat).to.equal(1.0);
-        expect(posicion.lng).to.equal(5.0);
-    }
-    )
-    it('funcion sumarPosicion', () => {
-        let posicion = new Posicion(1.0, 5.0);
-        let pos2 = new Posicion(3, 4)
-        posicion.sumarPosicion(pos2);
-        expect(posicion.lat).to.equal(4.0);
-        expect(posicion.lng).to.equal(9.0);
-    }
-    )
-    it('funcion restarPosicion', () => {
-        let posicion = new Posicion(1.0, 5.0);
-        let pos2 = new Posicion(3, 4)
-        posicion.restarPosicion(pos2);
-        expect(posicion.lat).to.equal(-2.0);
-        expect(posicion.lng).to.equal(1.0);
-    }
-    )
+describe('Test para la Clase Movil', () => {
 
+    
+    it('funcion empaquetarParaEnviar',()=>{
+        let mov = {
+            id: 1,
+            nombre: "movil-1",
+            posicion: [10, 20.2]
+        }
+        let m1 = new Movil(mov);
+        let mov2 = m1.empaquetarParaEnviar();
+        
+    })
+    it('funcion compararMovil', () => {
+        let mov = {
+            id: 1,
+            nombre: "movil-1",
+            posicion: [10, 20.2]
+        }
+        let m1 = new Movil(mov);
+        let m2 = new Movil(mov);
+        expect(m1.compararMovil(m2)).to.true;
+    }
+    )
+    it('funcion compararMovilRaw', () => {
+        let mov = {
+            id: 1,
+            nombre: "movil-1",
+            posicion: [10, 20.2]
+        }
+        let m1 = new Movil(mov);
+        expect(m1.compararMovilRaw(mov)).to.true;
+    }
+    )
 })
