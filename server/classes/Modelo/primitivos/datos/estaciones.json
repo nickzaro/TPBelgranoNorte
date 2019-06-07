@@ -1,0 +1,170 @@
+[
+    {
+        "id": 0,
+        "nombre": "Retiro",
+        "ubicacion": [
+            -34.590264,
+            -58.373742
+        ]
+    },
+    {
+        "id": 1,
+        "nombre": "Saldías",
+        "ubicacion": [
+            -34.575614,
+            -58.399424
+        ]
+    },
+    {
+        "id": 2,
+        "nombre": "Ciudad Universitaria",
+        "ubicacion": [
+            -34.543103,
+            -58.447776
+        ]
+    },
+    {
+        "id": 3,
+        "nombre": "Aristóbulo del Valle",
+        "ubicacion": [
+            -34.53739,
+            -58.477475
+        ]
+    },
+    {
+        "id": 4,
+        "nombre": "M. M. Padilla",
+        "ubicacion": [
+            -34.543123,
+            -58.500319
+        ]
+    },
+    {
+        "id": 5,
+        "nombre": "Florida",
+        "ubicacion": [
+            -34.5369,
+            -58.51295
+        ]
+    },
+    {
+        "id": 6,
+        "nombre": "Munro",
+        "ubicacion": [
+            -34.53165,
+            -58.523939
+        ]
+    },
+    {
+        "id": 7,
+        "nombre": "Carapalina",
+        "ubicacion": [
+            -34.528872,
+            -58.537117
+        ]
+    },
+    {
+        "id": 8,
+        "nombre": "Boulogne Sur Mer",
+        "ubicacion": [
+            -34.50896,
+            -58.564973
+        ]
+    },
+    {
+        "id": 9,
+        "nombre": "Vice A. Montes",
+        "ubicacion": [
+            -34.504133,
+            -58.620185
+        ]
+    },
+    {
+        "id": 10,
+        "nombre": "Don Torcuato",
+        "ubicacion": [
+            -34.502659,
+            -58.642012
+        ]
+    },
+    {
+        "id": 11,
+        "nombre": "A. Sourdeaux",
+        "ubicacion": [
+            -34.50287,
+            -58.666203
+        ]
+    },
+    {
+        "id": 12,
+        "nombre": "Villa de Mayo",
+        "ubicacion": [
+            -34.503387,
+            -58.680729
+        ]
+    },
+    {
+        "id": 13,
+        "nombre": "Los Polvorines",
+        "ubicacion": [
+            -34.498983,
+            -58.694493
+        ]
+    },
+    {
+        "id": 14,
+        "nombre": "Ing. P. Nogués",
+        "ubicacion": [
+            -34.49368,
+            -58.706525
+        ]
+    },
+    {
+        "id": 15,
+        "nombre": "Grand Bourg",
+        "ubicacion": [
+            -34.485404,
+            -58.725209
+        ]
+    },
+    {
+        "id": 16,
+        "nombre": "Tierras Altas",
+        "ubicacion": [
+            -34.478958,
+            -58.739562
+        ]
+    },
+    {
+        "id": 17,
+        "nombre": "Tortuguitas",
+        "ubicacion": [
+            -34.470966,
+            -58.757366
+        ]
+    },
+    {
+        "id": 18,
+        "nombre": "M. Alberti",
+        "ubicacion": [
+            -34.462739,
+            -58.775645
+        ]
+    },
+    {
+        "id": 19,
+        "nombre": "Del viso",
+        "ubicacion": [
+            -34.453941,
+            -58.795412
+        ]
+    },
+    {
+        "id": 20,
+        "nombre": "Villa Rosa",
+        "ubicacion": [
+            -34.415986,
+            -58.871637
+        ]
+    }
+]
