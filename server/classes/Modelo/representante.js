@@ -1,60 +1,85 @@
 const { Movil } = require('./primitivos/movil');
 const { Posicion } = require('./primitivos/Posicion');
+const { Pasajero } = require('./pasajero');
 // const Parametros = require('../utilidades/parametros');
 
+
+//SERA QUE PONGO LA POSICION INICIAL USANDO LA DEL TREN SEGUN EL HORARIO
+// Y LA POSICION DEL QUE SE CONECTA?, O ARMO UN REPRESENTANTE SOLO
+//SABIENDO LA HORA DEL SISTEMA
+
+//O TOMO SOLO [0,0] Y SEGUN SE CONECTAN VOY UBICANDO DONDE ESTA 
 class Representante extends Movil {
     constructor(rep) { //numeroFormacion,PoolFormacion,posicion
 
         super(rep);
-        this.cantidad = 0;
-        this.pasajeros = [];
+        this.pasajeros = new Map();
+        this.cantidad = this.getCantidad();
     }
 
     //enpaquetamos los datos para poder ser enviado a los clientes
     empaquetarParaEnviar() {
+        let rep = super.empaquetarParaEnviar();
+
         return {
-            id: this.id,
-            nombre: this.nombre,
-            posicion: this.calcularRepresentante().empaquetarParaEnviar(),
-            cantidad: this.cantidad
+            id: rep.id,
+            nombre: rep.nombre,
+            posicion: rep.posicion,
+            cantidad: this.getCantidad()
         }
     }
-
-    compararPaquetes(pa2) {
-        let pa1 = empaquetarParaEnviar();
-        return (pa1.id === pa2.id && pa1.nombre === pa2.nombre
-            && pa1.compararPaquetes(pa2) && pa1.cantidad === pa2.cantidad);
+    // no usamos por ahora
+    verificarPosicionPasajero(pasajero) {
+        //usando parametros verificamos si el pasajero pertenece a este viaje
+        return true;
     }
-    agregarAlConjunto(pasajero) {
-        sacarPersona(pasajero); // saco a la persona
-        personas.push(pasajero); //agrego la updateada
-
-    }
-
-    agregarPersona(pasajero) {
-        if (verificarPosicionPersona(pasajero)) {
-            agregarAlPool(pasajero);
+    //agrega un pasajero si es que cumple con estar en el rango
+    // del representant
+    agregarPasajero(pasajero) {
+        if (this.verificarPosicionPasajero(pasajero)) {
+            this.agregarAPasajeros(pasajero);
+            this.actualizarRepresentante();
             return true;
         }
         return false;
     }
-
-    sacarPersona(pasajero) {
-        this.pasajeros = this.pasajeros.filter(p => p.id != pasajero.id);
+    //sacar un pasajero que existia
+    sacarPasajero(pasajero) {
+        this.pasajeros.delete(pasajero.getID());
+        this.actualizarRepresentante();
     }
 
+    
     //actualiza el representante de acuerdo a los clientes que tiene
-    calcularRepresentante() {
-        for (let persona of this.pasajeros) {
-            this.posicion.sumarPosicion(persona.posicion);
+    actualizarRepresentante() {
+        this.posicion.resetPosicion();// limpio la poscion representante
+        for (let [clave, valor] of this.pasajeros) {
+            // console.log("PASAJERO:", valor);
+            this.getPosicion().sumarPosicion(valor.getPosicion());
         }
-        this.posicion.dividirEntre(this.pasajeros.length)
+        if (this.getCantidad() > 0)
+            this.posicion.dividirEntre(this.pasajeros.size); //OJO ACA 1 del represent
         return this.posicion;
     }
 
-    verificarPosicionPersona(pasajero) {
-        //usando parametros verificamos si el pasajero pertenece a este viaje
-        return true;
+    compararRepresentante(m2) {
+        return (this.getID() === m2.getID() && this.getNombre() === m2.getNombre()
+            && this.getPosicion().compararPosicion(m2.getPosicion())
+            && this.getCantidad() === m2.getCantidad());
+    }
+    compararRepresentanteRaw(m2Raw) {
+        return (this.getID() === m2Raw.id && this.getNombre() === m2Raw.nombre
+            && this.getPosicion().compararPosicionRaw(m2Raw.posicion)
+            && this.getCantidad() === m2Raw.cantidad);
+    }
+
+    agregarAPasajeros(pasajero) {
+        this.sacarPasajero(pasajero); // saco a la persona
+        this.pasajeros.set(pasajero.getID(), pasajero); //agrego updateada
+    }
+
+    getCantidad() {
+        return this.pasajeros.size;
     }
 }
 module.exports = {
