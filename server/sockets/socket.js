@@ -3,14 +3,6 @@ const { Representante } = require('../classes/Modelo/representante');
 
 const { ManejadorViajes } = require('../classes/Controlador/manejador.viajes');
 
-let repRaw = {
-    id: 1,
-    nombre: "movil-1",
-    posicion: [10, 20.2]
-};
-//let reprePasa = new Representante(repRaw);
-//console.log(reprePasa.empaquetarParaEnviar());
-
 let manejador = new ManejadorViajes();
 
 io.on('connection', (client) => {
@@ -20,9 +12,11 @@ io.on('connection', (client) => {
 
 
     //esta es la funcionalidad que se encarga
-    client.on('posicion-cliente', (CliDestino) => {
-        console.log("recibo el cliente + destino",CliDestino);
-        analizarPosicion(CliDestino);
+    client.on('posicion-cliente', (PasajeroDestino) => {
+        console.log("recibo el cliente + destino",PasajeroDestino);
+        
+        //esta funcion retornaria una funcion para
+        manejador.construirViaje(PasajeroDestino);
 
         //console.log("devolver el estado del viaje en un callback");
         //tiene que haber una variable que indique si se le envia todo 
@@ -36,9 +30,6 @@ io.on('connection', (client) => {
     })
 });
 
-function analizarPosicion(CliDestino){
-    dondeSeEncuentra(CliDestino.cliente);
-}
 
 
 //enviar las estaciones con el recorrido segun horario sistema
