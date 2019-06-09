@@ -1,8 +1,8 @@
 class Posicion {
-    constructor(posicionObj) {
-        console.log(posicionObj);
-        this.lat = posicionObj[0];
-        this.lng = posicionObj[1];
+    constructor(posicionRaw) {
+        console.log(posicionRaw);
+        this.lat = posicionRaw[0];
+        this.lng = posicionRaw[1];
     }
     multiplicarPor(numero) {
         this.lat *= numero;

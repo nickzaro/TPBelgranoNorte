@@ -1,9 +1,9 @@
 const {Posicion} = require('./Posicion');
 class Movil {
-    constructor(movilObj) {
-        this.id = movilObj.id;
-        this.nombre = movilObj.nombre;
-        this.posicion = new Posicion(movilObj.posicion);
+    constructor(movilRaw) {
+        this.id = movilRaw.id;
+        this.nombre = movilRaw.nombre;
+        this.posicion = new Posicion(movilRaw.posicion);
     }
     getPosicion() {
         return this.posicion;

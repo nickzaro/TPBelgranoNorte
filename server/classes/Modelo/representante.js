@@ -10,9 +10,9 @@ const { Pasajero } = require('./pasajero');
 
 //O TOMO SOLO [0,0] Y SEGUN SE CONECTAN VOY UBICANDO DONDE ESTA 
 class Representante extends Movil {
-    constructor(rep) { //numeroFormacion,PoolFormacion,posicion
+    constructor(repRaw) { //numeroFormacion,PoolFormacion,posicion
 
-        super(rep);
+        super(repRaw);
         this.pasajeros = new Map();
         this.cantidad = this.getCantidad();
     }

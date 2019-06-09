@@ -47,17 +47,17 @@ describe('Test para la Clase Representante', () => {
         //let repRaw = rep.empaquetarParaEnviar();
        //console.log("repRaw",repRaw);
         rep.sacarPasajero(pas);
-        console.log("repEmpaquetado",rep.empaquetarParaEnviar());
+       // console.log("repEmpaquetado",rep.empaquetarParaEnviar());
 
         // no hay pasajeros
         expect(rep.compararRepresentanteRaw(repRaw0)).to.true;
         rep.agregarPasajero(pas);
-        console.log("LUEGOAGREGAR",rep.empaquetarParaEnviar());
-        console.log("LUEGOAGREGAR",repRaw);
+        //console.log("LUEGOAGREGAR",rep.empaquetarParaEnviar());
+        //console.log("LUEGOAGREGAR",repRaw);
         // se agrego un Pasajero
         expect(rep.compararRepresentanteRaw(repRaw)).to.true;
         rep.sacarPasajero(pas);
-        console.log("repEmpaquetado",rep.empaquetarParaEnviar());
+        //console.log("repEmpaquetado",rep.empaquetarParaEnviar());
 
         // no hay pasajeros
         expect(rep.compararRepresentanteRaw(repRaw0)).to.true;

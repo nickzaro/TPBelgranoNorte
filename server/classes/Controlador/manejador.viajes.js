@@ -18,8 +18,9 @@ class ManejadorViajes {
         for (let estacion of estaciones) {
             this.estaciones.set(estacion.id, estacion);
         }
-        // console.log(this.estaciones);
+        console.log(this.estaciones);
     }
+    
     cargarViajes() {
         this.viajesLVI = new CargadorViaje(lvi, this.estaciones, "ida");
         this.viajesLVV = new CargadorViaje(lvv, this.estaciones, "vuelta");
@@ -28,13 +29,25 @@ class ManejadorViajes {
         this.viajesDFI = new CargadorViaje(dfi, this.estaciones, "ida");
         this.viajesDFV = new CargadorViaje(dfv, this.estaciones, "vuelta");
     }
-    armarViaje(pasajero) {
+    
+    procesarPeticion(pasajero) {
         console.log("realizar validaciones");
         console.log("armar viaje");
         console.log("agregar el viajero para ser representado ");
         return pasajero;
     }
+    
+    getEstaciones(){
+        return this.estaciones;
+    }
 
+    getEstacionesRaw(){
+        let estaciones = [];
+        for (let [clave,valor] of this.estaciones){
+            estaciones.push(valor);
+        }
+        return estaciones;
+    }
 }
 
 module.exports = {
