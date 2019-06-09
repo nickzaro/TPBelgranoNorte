@@ -16,7 +16,8 @@ io.on('connection', (client) => {
         console.log("recibo el cliente + destino",PasajeroDestino);
         
         //esta funcion retornaria una funcion para
-        manejador.construirViaje(PasajeroDestino);
+        client.emit('posicion-cliente',manejador.construirViaje(PasajeroDestino));
+        
 
         //console.log("devolver el estado del viaje en un callback");
         //tiene que haber una variable que indique si se le envia todo 

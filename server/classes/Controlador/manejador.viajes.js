@@ -47,7 +47,7 @@ class ManejadorViajes {
     }
     */
     construirViaje(pasajeroDestino) {
-        let esenario = siatuacionPasajero(pasajeroDestino);
+        let esenario = this.siatuacionPasajero(pasajeroDestino);
         if (esenario === dondeEsta.FUERA) {
             return this.recomendarEstacion(pasajeroDestino);
         }
@@ -61,16 +61,22 @@ class ManejadorViajes {
     }
     // necesario cuando el viaje este en curso creado y andando osea el ciclo comun
 
+    siatuacionPasajero(){
+        return dondeEsta.FUERA; // para usar solo el camino FUERA
+    }
+
     actualizarUbicacionViaje() {
 
     }
 
     //buscar la estacion mas proxima a la persona, aclaro que es doble busqueda
     recomendarEstacion(pasajeroDestino) {
+        //console.log(pasajeroDestino);
         let [id, distancia] = buscarEstacionCerca(pasajeroDestino.pasajero, this.getEstaciones());
+
         return {
             escenario: dondeEsta.FUERA,
-            estacion: id,
+            estacion: this.getEstaciones().get(id),
             distancia: distancia
         }
     }

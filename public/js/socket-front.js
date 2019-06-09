@@ -2,7 +2,7 @@ var socket = io();
 let mov = {
     id: 1,
     nombre: "movil-1",
-    posicion: [10, 20.2]
+    posicion: [-34.577614, -58.396424] //cerca de eestacion saldias
 }
 socket.on('connect', () => {
     console.log("me conecte al servidor");
@@ -23,12 +23,19 @@ socket.on("estaciones", (estaciones) => {
 
 
 //envia la posicion del cliente mas el destino
-function enviarDestinoPosicion(id){
-    socket.emit('posicion-cliente',{
-        cliente: mov, // envio la posicion del cliente
-        destinoID:id // envio el id de la estacion de destino
+function enviarDestinoPosicion(id) {
+    socket.emit('posicion-cliente', {
+        pasajero: mov, // envio la posicion del cliente
+        destinoID: id // envio el id de la estacion de destino
     });
 }
+
+socket.on('posicion-cliente', (resSegunEsenario) => {
+    console.log(resSegunEsenario);
+    alert(resSegunEsenario.estacion.nombre + " a: " + Math.trunc(resSegunEsenario.distancia * 1000) + " metros");
+
+})
+
 
 
 function estacionesAlDOM(estaciones) {
@@ -56,4 +63,10 @@ function seleccionar(elemento) {
     //node=document.getElementById(id);
     //node.parentNode.removeChild(node);
     enviarDestinoPosicion(id);
+}
+
+var dondeEsta = {
+    ESTACION: 0,
+    VIAJE: 1,
+    FUERA: 2
 }
