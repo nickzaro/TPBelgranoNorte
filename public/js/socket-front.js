@@ -30,12 +30,26 @@ function enviarDestinoPosicion(id) {
     });
 }
 
-socket.on('posicion-cliente', (resSegunEsenario) => {
-    console.log(resSegunEsenario);
-    alert(resSegunEsenario.estacion.nombre + " a: " + Math.trunc(resSegunEsenario.distancia * 1000) + " metros");
+socket.on('posicion-cliente', (resSegunEscenario) => {
+    console.log(resSegunEscenario); // chequear el esenario
+    let escenario = resSegunEscenario.escenario;
+    if (escenario === dondeEsta.ESTACION) {
+        aplicarEscenarioESTACION(resSegunEscenario);
+    } else if (escenario === dondeEsta.VIAJE) {
+        aplicarEscenarioVIAJE(resSegunEscenario);
+    } else if (escenario === dondeEsta.FUERA) {
+        aplicarEscenarioFUERA(resSegunEscenario);
+    } else {
+        console.log("no registrado el tipo de esenario");
+        console.log(resSegunEscenario);
+    }
+
+
 
 })
-
+function aplicarEscenarioFUERA(resSegunEscenario) {
+    alert("Estas cerca de: " + resSegunEscenario.estacion.nombre + " a " + Math.trunc(resSegunEscenario.distancia * 1000) + "metros");
+}
 
 
 function estacionesAlDOM(estaciones) {
@@ -68,5 +82,6 @@ function seleccionar(elemento) {
 var dondeEsta = {
     ESTACION: 0,
     VIAJE: 1,
-    FUERA: 2
+    FUERA: 2,
+    DESCONICIDO: 10
 }

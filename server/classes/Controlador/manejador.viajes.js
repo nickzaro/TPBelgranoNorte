@@ -20,7 +20,7 @@ class ManejadorViajes {
         for (let estacion of estaciones) {
             this.estaciones.set(estacion.id, estacion);
         }
-        console.log(this.estaciones);
+        //console.log(this.estaciones);
     }
 
     cargarViajes() {
@@ -61,7 +61,7 @@ class ManejadorViajes {
     }
     // necesario cuando el viaje este en curso creado y andando osea el ciclo comun
 
-    siatuacionPasajero(){
+    siatuacionPasajero() {
         return dondeEsta.FUERA; // para usar solo el camino FUERA
     }
 

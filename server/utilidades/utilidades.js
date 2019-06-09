@@ -63,7 +63,8 @@ var MAX_DISTANCIA = 0.05; // 50 metros, chequear
 var dondeEsta = {
     ESTACION: 0,
     VIAJE: 1,
-    FUERA: 2
+    FUERA: 2,
+    DESCONICIDO:10
 }
 
 function buscarEstacionCerca(pasajero, estaciones) {
