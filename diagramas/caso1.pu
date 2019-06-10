@@ -1,0 +1,4 @@
+@startuml
+:cliente/sistema: -> (Obtención de información de estaciones y horarios) 
+
+@enduml

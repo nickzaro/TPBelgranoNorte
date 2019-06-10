@@ -1,3 +1,4 @@
+
 var socket = io();
 let enFuera = {
     id: 1,
@@ -7,7 +8,7 @@ let enFuera = {
 
 let enViaje = {
     id: 1,
-    nombre: "pasajero-saldias-retiro",
+    nombre: "pasajero-saldias-Retiro",
     posicion: [-34.5834132246055, -58.38547825813293]
 }
 
@@ -38,7 +39,7 @@ socket.on("estaciones", (estaciones) => {
 //envia la posicion del cliente mas el destino
 function enviarDestinoPosicion(id) {
     socket.emit('posicion-cliente', {
-        pasajero: enEstacion, // envio la posicion del cliente
+        pasajero: enFuera, // envio la posicion del cliente
         destinoID: id // envio el id de la estacion de destino
     });
 }
@@ -61,7 +62,7 @@ socket.on('posicion-cliente', (resSegunEscenario) => {
 
 })
 function aplicarEscenarioFUERA(resSegunEscenario) {
-    alert("Estas cerca de: " + resSegunEscenario.estacion.nombre + " a " + Math.trunc(resSegunEscenario.distancia * 1000) + "metros");
+    Swal.fire(resSegunEscenario.estacion.nombre, "a " + Math.trunc(resSegunEscenario.distancia * 1000) + "metros", "aceptar");
 }
 
 

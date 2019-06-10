@@ -1,0 +1,16 @@
+@startuml
+
+title Obtención de información de estacion y horarios
+
+participant cliente
+cliente -> socket: conexion
+activate socket
+socket --> cliente: estaciones
+cliente -> socket: cliente-destino
+socket-> manejador: cliente-destino
+activate manejador
+manejador->manejador: procesamiento
+manejador --> socket: estacion-horario
+deactivate manejador
+socket--> cliente:estacion-horario
+@enduml

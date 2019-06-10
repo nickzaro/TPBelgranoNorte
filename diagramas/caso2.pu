@@ -1,0 +1,3 @@
+@startuml
+:cliente/sistema: -> (Obtención de información de retraso en el viaje) 
+@enduml

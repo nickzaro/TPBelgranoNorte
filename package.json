@@ -14,7 +14,8 @@
     "@turf/turf": "^5.1.6",
     "express": "^4.17.1",
     "leaflet": "^1.5.1",
-    "socket.io": "^2.2.0"
+    "socket.io": "^2.2.0",
+    "sweetalert2": "^8.12.1"
   },
   "devDependencies": {
     "@types/leaflet": "^1.4.4",

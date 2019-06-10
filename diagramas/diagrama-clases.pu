@@ -1,0 +1,53 @@
+@startuml
+class ManejadorDeViajes{
++cargarEstaciones()
++cargarViajes()
++construirViaje({pasajero,destino})
++situacionPasajero({pasajero,destino})
+}
+class CargadorViaje{
++procesarHorarios()
++procesarEstaciones()
+}
+class Socket{
+    +on()
+    +emit()
+}
+
+class Pasajero{
+
+}
+class Representante{
+    +emplaquetarParaEnviar()
+    +agregarPasajero(pasajero)
+    +sacarPasajero(pasajero)
+    +actualizarRepresentante()
+}
+class Tren
+class Estacion
+class Horario
+class Movil{
+    +getPosicion()
+    +getId()
+    +getNombre()
+    __datos privados__
+    -int id
+    -string nombre
+    -Posicion posicion
+}
+class Viaje{
+    +informacionRepresentante()
+    +informacionTren()
+}
+ManejadorDeViajes - Socket : usa >
+ManejadorDeViajes o-- CargadorViaje
+ManejadorDeViajes *-- Viaje
+CargadorViaje o-- Estacion
+CargadorViaje o-- Horario
+Viaje "1" --- "1" Tren
+Viaje "1"--- "1" Representante
+Representante "1"-- "*" Pasajero
+Movil <|-- Representante
+Movil <|-- Tren
+Movil <|-- Pasajero
+@enduml
