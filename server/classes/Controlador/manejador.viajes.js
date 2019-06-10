@@ -6,7 +6,8 @@ const shv = require('./../Modelo/primitivos/datos/sab-habiles-vuelta.json');
 const dfi = require('./../Modelo/primitivos/datos/dom-feriados-ida.json');
 const dfv = require('./../Modelo/primitivos/datos/dom-feriados-vuelta.json');
 const estaciones = require('./../Modelo/primitivos/datos/estaciones.json');
-const { distanciaLatLngEnKMRaw, MAX_DISTANCIA, dondeEsta, buscarEstacionCerca } = require('./../../utilidades/utilidades');
+const { distanciaLatLngEnKMRaw, MAX_DISTANCIA, dondeEsta, buscarEstacionCerca,
+    verSiEstaEnViaje,distancias } = require('./../../utilidades/utilidades');
 const { CargadorViaje } = require('./cargadorViaje');
 
 class ManejadorViajes {
@@ -30,6 +31,7 @@ class ManejadorViajes {
         this.viajesSHV = new CargadorViaje(shv, this.estaciones, "vuelta");
         this.viajesDFI = new CargadorViaje(dfi, this.estaciones, "ida");
         this.viajesDFV = new CargadorViaje(dfv, this.estaciones, "vuelta");
+        // console.log(this.viajesLVI);
     }
 
     procesarPeticion(pasajero) {
@@ -61,8 +63,19 @@ class ManejadorViajes {
     }
     // necesario cuando el viaje este en curso creado y andando osea el ciclo comun
 
-    siatuacionPasajero() {
-        return dondeEsta.FUERA; // para usar solo el camino FUERA
+    siatuacionPasajero(pasajeroDestino) {
+        let [id, distancia] = buscarEstacionCerca(pasajeroDestino.pasajero, this.getEstaciones());
+        let estaEnviaje = verSiEstaEnViaje(pasajeroDestino.pasajero, this.getEstaciones(), id);
+        if (distancia < distancias.ESTACION) {
+            return dondeEsta.ESTACION;
+        }
+        if ((estaEnviaje[0] != -1) && (distancia > distancias.ESTACION)) {
+            return dondeEsta.VIAJE; //ACA se Arma el 
+        }
+        if (distancia > distancias.ESTACION) {
+            return dondeEsta.FUERA; // para usar solo el camino FUERA
+        }
+        return dondeEsta.DESCONICIDO; // si algo fallo con los calculos
     }
 
     actualizarUbicacionViaje() {
@@ -80,6 +93,14 @@ class ManejadorViajes {
             distancia: distancia
         }
     }
+    avisarArriboTren(pasajeroDestino){
+        console.log("Esta en la ESTACION :", pasajeroDestino);
+    }
+
+    crearViaje(pasajeroDestino){ // aca se arma el viaje para el pasajero
+        console.log("Esta en VIAJE :", pasajeroDestino);
+    }
+
 
 
     getEstaciones() {

@@ -1,5 +1,7 @@
-const { distanciaLatLngEnKMRaw, buscarEstacionCerca } = require('./../server/utilidades/utilidades');
+const { distanciaLatLngEnKMRaw, buscarEstacionCerca, horaADecimal, decimalAHora,
+    distanciaporRangoEnCamino,crearPuntosRecorrido } = require('./../server/utilidades/utilidades');
 const { ManejadorViajes } = require('./../server/classes/Controlador/manejador.viajes');
+const turf = require('@turf/turf');
 const expect = require('chai').expect;
 describe('Test para la Utilidades', () => {
     it('funcion distanciaLatLngEnKMRaw', () => {
@@ -32,7 +34,7 @@ describe('Test para la Utilidades', () => {
         let idDistancia = buscarEstacionCerca(pasajeroRetiro, manejador.getEstaciones());
 
         console.log(idDistancia);
-        expect(idDistancia[0]===0).to.true;
+        expect(idDistancia[0] === 0).to.true;
         let pasajeroGB = {
             'id': 0,
             'nombre': "Pasajero",
@@ -42,10 +44,20 @@ describe('Test para la Utilidades', () => {
             ]
         }
 
-         idDistancia = buscarEstacionCerca(pasajeroGB, manejador.getEstaciones());
+        idDistancia = buscarEstacionCerca(pasajeroGB, manejador.getEstaciones());
         console.log(idDistancia);
-        expect(idDistancia[0]===15).to.true;
+        expect(idDistancia[0] === 15).to.true;
         //expect(rep.compararRepresentante(rep2)).to.true;
+    }
+    )
+
+    it('Funciones horaADecimal y decimalAHora', () => {
+        let hora = "18:40";
+        let horaD = horaADecimal(hora);
+        console.log(horaD);
+        let hora2 = decimalAHora(horaD);
+        console.log(hora2);
+        expect(hora === hora2).to.true;
     }
     )
 })

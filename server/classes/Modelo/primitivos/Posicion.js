@@ -1,6 +1,6 @@
 class Posicion {
     constructor(posicionRaw) {
-        console.log(posicionRaw);
+        // console.log(posicionRaw);
         this.lat = posicionRaw[0];
         this.lng = posicionRaw[1];
     }

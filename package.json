@@ -5,12 +5,13 @@
   "main": "index.js",
   "scripts": {
     "test": "mocha",
-    "dev":"nodemon index.js",
-    "start":"node index.js"
+    "dev": "nodemon index.js",
+    "start": "node index.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@turf/turf": "^5.1.6",
     "express": "^4.17.1",
     "leaflet": "^1.5.1",
     "socket.io": "^2.2.0"

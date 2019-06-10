@@ -1,3 +1,6 @@
+const { Posicion } = require('./../classes/Modelo/primitivos/Posicion');
+const  turf = require('@turf/turf');
+
 //definicion de las estructuras que se maneja
 
 //posicion
@@ -58,17 +61,22 @@ function deg2rad(deg) {
     return deg * (Math.PI / 180)
 }
 
-var MAX_DISTANCIA = 0.05; // 50 metros, chequear
+
 
 var dondeEsta = {
     ESTACION: 0,
     VIAJE: 1,
     FUERA: 2,
-    DESCONICIDO:10
+    DESCONICIDO: 10
+}
+var distancias = {
+    ESTACION: 0.05,  //50 metros de la estacion
+    VIAJE: 0.01  // 10 metros del punto tren
 }
 
+
 function buscarEstacionCerca(pasajero, estaciones) {
-    let idDistancia = [-1,1000000];
+    let idDistancia = [-1, 1000000]; // idestacion, distancia
     let distancia = 0;
     for (let [clave, estacion] of estaciones) {
         distancia = distanciaLatLngEnKMRaw(pasajero.posicion, estacion.ubicacion);
@@ -81,8 +89,59 @@ function buscarEstacionCerca(pasajero, estaciones) {
     return idDistancia;
 }
 
+// si el pEvaluar se encuentra entre los dos puntos con un ancho de VIAJE=+-0.02
+function distanciaporRangoEnCamino(pInicial, pFinal, pEvaluar) {
+    let pEval = turf.point(pEvaluar);
+    let line = turf.lineString([pInicial, pFinal]);
+    return turf.pointToLineDistance(pEval, line);
+}
+//--------------------------------------------------------------
+
+function verSiEstaEnViaje(pasajero, estaciones, idCercana) {
+    let idMenos1 = idCercana - 1;
+    let idMas1 = idCercana + 1;
+    let estacion = estaciones.get(idCercana);
+    let idOtraEstacion = -1;
+    if (estaciones.has(idMenos1)) {
+        let estMenos1 = estaciones.get(idMenos1);
+        console.log(estMenos1.ubicacion, estacion.ubicacion, pasajero.posicion);
+        let distMenos1 = distanciaporRangoEnCamino(estMenos1.ubicacion, estacion.ubicacion, pasajero.posicion);
+        if (distMenos1 <= distancias.VIAJE) { // estaria en viaje
+            idOtraEstacion = estMenos1;
+            return [idOtraEstacion, idCercana, pasajero];
+        }
+    }
+    if (estaciones.has(idMas1)) {
+        let estMas1 = estaciones.get(idMas1);
+        let distMas1 = distanciaporRangoEnCamino(estMas1.ubicacion, estacion.ubicacion, pasajero.posicion);
+        if (distMas1 <= distancias.VIAJE) { // estaria en viaje
+            idOtraEstacion = estMas1;
+            return [idOtraEstacion, idCercana, pasajero];
+        }
+    }
+    return [idOtraEstacion];
+}
+
+
+
+//parser "18:40" => 18*60+40 = 1120 ovbia los segundos
+function horaADecimal(hora) {
+    let enVectordecimal = hora.split(":");
+    console.log(enVectordecimal);
+    return (parseInt(enVectordecimal[0]) * 60 + parseInt(enVectordecimal[1]));
+}
+// 1120 => "18:40"
+function decimalAHora(horaDecimal) {
+    let horas = Math.trunc(horaDecimal / 60);
+    let min = horaDecimal % 60;
+    return String(horas + ":" + min);
+}
+//-----------------------------------------------------
+
 
 
 module.exports = {
-    distanciaLatLngEnKMRaw, MAX_DISTANCIA, dondeEsta, buscarEstacionCerca
+    distanciaLatLngEnKMRaw, dondeEsta, buscarEstacionCerca,
+    horaADecimal, decimalAHora, distancias, distanciaporRangoEnCamino,
+    verSiEstaEnViaje
 }
