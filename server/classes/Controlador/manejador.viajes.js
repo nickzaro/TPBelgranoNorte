@@ -7,7 +7,7 @@ const dfi = require('./../Modelo/primitivos/datos/dom-feriados-ida.json');
 const dfv = require('./../Modelo/primitivos/datos/dom-feriados-vuelta.json');
 const estaciones = require('./../Modelo/primitivos/datos/estaciones.json');
 const { distanciaLatLngEnKMRaw, MAX_DISTANCIA, dondeEsta, buscarEstacionCerca,
-    verSiEstaEnViaje,distancias } = require('./../../utilidades/utilidades');
+    verSiEstaEnViaje, distancias } = require('./../../utilidades/utilidades');
 const { CargadorViaje } = require('./cargadorViaje');
 
 class ManejadorViajes {
@@ -86,6 +86,9 @@ class ManejadorViajes {
     recomendarEstacion(pasajeroDestino) {
         //console.log(pasajeroDestino);
         let [id, distancia] = buscarEstacionCerca(pasajeroDestino.pasajero, this.getEstaciones());
+        //console.log('HORAA:',new Date());
+        console.log(id, pasajeroDestino.destinoID);
+        let [horaInicio, horaFin] = this.buscarHorario(id, pasajeroDestino.destinoID);
 
         return {
             escenario: dondeEsta.FUERA,
@@ -93,11 +96,59 @@ class ManejadorViajes {
             distancia: distancia
         }
     }
-    avisarArriboTren(pasajeroDestino){
+    // el destino lo necesito para saber para donde se dirige
+    buscarHorario(idOrigen, idDestino) {
+        let fecha = new Date();
+        let dia = fecha.getDay();
+        let res = ["ERROR", "ERROR"];
+        if (idOrigen < idDestino) {
+            if (dia > 0 && dia < 6) { //dia de la semana e ida
+                res = this.buscarHorariosXRango(idOrigen, idDestino, fecha, this.viajesLVI);
+            }
+            else if (dia === 6) { //sabado e ida
+                res = this.buscarHorariosXRango(idOrigen, idDestino, fecha, this.viajesSHI);
+            }
+            else if (dia === 0) { //domingo e ida
+                res = this.buscarHorariosXRango(idOrigen, idDestino, fecha, this.viajesDFI);
+            }
+            else {
+                //NOEXISTE EL DIA
+                console.error("NO EXISTE EL DIA: ", dia);
+            }
+        }
+        else if (idOrigen > idDestino) {
+            if (dia > 0 && dia < 6) { //dia de la semana y vuelta
+                res = this.buscarHorariosXRango(idOrigen, idDestino, fecha, this.viajesLVV);
+            }
+            if (dia === 6) { //sabado y ida
+                res = this.buscarHorariosXRango(idOrigen, idDestino, fecha, this.viajesSHV);
+            }
+            if (dia === 0) { //domingo y ida
+                res = this.buscarHorariosXRango(idOrigen, idDestino, fecha, this.viajesDFV);
+            } else {
+                //NOEXISTE EL DIA
+                console.error("NO EXISTE EL DIA: ", dia);
+            }
+        }
+        else if (idOrigen === idDestino) {
+            console.log("ESTA EN LA ESTACION ORIGEN = DESTINO");
+            res = [fecha.getHours(), fecha.getHours()];
+        }
+        console.log( dia, fecha, idOrigen, idDestino);
+        return res;
+    }
+
+    buscarHorariosXRango(idOrigen, destino, hora, viajes) {
+        let horas = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "0"];
+        console.log(horas);
+        return horas;
+
+    }
+    avisarArriboTren(pasajeroDestino) {
         console.log("Esta en la ESTACION :", pasajeroDestino);
     }
 
-    crearViaje(pasajeroDestino){ // aca se arma el viaje para el pasajero
+    crearViaje(pasajeroDestino) { // aca se arma el viaje para el pasajero
         console.log("Esta en VIAJE :", pasajeroDestino);
     }
 

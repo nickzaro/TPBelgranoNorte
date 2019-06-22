@@ -32,7 +32,7 @@ class CargadorViaje {
             }
             i--;
         });
-        // console.log(rec);
+     //console.log(rec);
         return rec;
 
     }
@@ -45,7 +45,7 @@ class CargadorViaje {
             }
             i++;
         });
-        // console.log(rec);
+         //console.log(rec);
         return rec;
     }
     empaquetar(i) { // seria empaquetar un recorrido

@@ -52,12 +52,13 @@ describe('Test para la Utilidades', () => {
     )
 
     it('Funciones horaADecimal y decimalAHora', () => {
-        let hora = "18:40";
+        let hora = "18:40:41";
         let horaD = horaADecimal(hora);
         console.log(horaD);
         let hora2 = decimalAHora(horaD);
         console.log(hora2);
-        expect(hora === hora2).to.true;
+        let hora3 = "18:40";
+        expect(hora2 === hora3).to.true;
     }
     )
 })

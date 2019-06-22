@@ -11,19 +11,10 @@ io.on('connection', (client) => {
     client.emit("estaciones", manejador.getEstacionesRaw());
 
 
-    //esta es la funcionalidad que se encarga
     client.on('posicion-cliente', (PasajeroDestino) => {
-        console.log("recibo el cliente + destino",PasajeroDestino);
-        
-        //esta funcion retornaria una funcion para
-        client.emit('posicion-cliente',manejador.construirViaje(PasajeroDestino));
-        
+        console.log("recibo el cliente + destino", PasajeroDestino);
 
-        //console.log("devolver el estado del viaje en un callback");
-        //tiene que haber una variable que indique si se le envia todo 
-        // y estaciones(primera vez que se conecta o cambia de coche) 
-        // o solo actualizar la situacion, para que elcliente sepa que leer
-        //client.emit('posicion-cliente',manejador.armarViaje(pasajero)); 
+        client.emit('posicion-cliente', manejador.construirViaje(PasajeroDestino));
     })
 
     client.on('disconnect', () => {

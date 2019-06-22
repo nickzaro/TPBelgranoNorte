@@ -40,7 +40,7 @@ socket.on("estaciones", (estaciones) => {
 function enviarDestinoPosicion(id) {
     socket.emit('posicion-cliente', {
         pasajero: enFuera, // envio la posicion del cliente
-        destinoID: id // envio el id de la estacion de destino
+        destinoID: parseInt(id) // envio el id de la estacion de destino
     });
 }
 
@@ -62,6 +62,7 @@ socket.on('posicion-cliente', (resSegunEscenario) => {
 
 })
 function aplicarEscenarioFUERA(resSegunEscenario) {
+    console.log(resSegunEscenario);
     Swal.fire(resSegunEscenario.estacion.nombre, "a " + Math.trunc(resSegunEscenario.distancia * 1000) + "metros", "aceptar");
 }
 
