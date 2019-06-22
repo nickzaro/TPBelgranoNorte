@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "mocha",
+    "testa": "mocha ./test/manejadorHorarios.test.js",
     "dev": "nodemon index.js",
     "start": "node index.js"
   },
