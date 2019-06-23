@@ -1,9 +1,10 @@
-const {ManejadorHorarios} = require('./../server/classes/Controlador/manejadorHorarios');
-const {ManejadorViajes} = require('./../server/classes/Controlador/manejador.viajes');
+const { ManejadorHorarios } = require('./../server/classes/Controlador/manejadorHorarios');
+const { ManejadorViajes } = require('./../server/classes/Controlador/manejador.viajes');
 const expect = require('chai').expect;
 
 describe('Test para ManejadorHorarios', () => {
 
+    /*
     it('funcion parsearHora', () => {
         let hora = "10:20";
         let h = "10";
@@ -42,4 +43,29 @@ describe('Test para ManejadorHorarios', () => {
         let idDestino = 15;
         ManejadorHorarios.buscarEnElDia(ManejadorHorarios.horaActualUTC(), idOrigen, idDestino, manejador.viajesSHI.recorridos); 
     })
+*/
+    /*
+        it("funcion stringHorasADate",()=>{
+            let manejador = new ManejadorViajes();
+            
+            ManejadorHorarios.stringHorasADate(manejador.viajesSHI.recorridos.get(79)); 
+        })
+    */
+
+    /*
+          it("funcion tiempoSegunID",()=>{
+              let manejador = new ManejadorViajes();
+              let idOrigen = 1;
+              let idDestino = 10;
+              ManejadorHorarios.tiempoSegunID(idOrigen,idDestino,manejador.viajesSHI.recorridos.get(79)); 
+          })
+    */
+
+    it("funcion menorTiempoLLegaEstacion", () => {
+        let manejador = new ManejadorViajes();
+        let idOrigen = 6;
+        let idDestino = 15;
+        ManejadorHorarios.menorTiempoLlegaEstacion(idOrigen, idDestino, manejador.viajesSHI.recorridos);
+    })
+
 })
