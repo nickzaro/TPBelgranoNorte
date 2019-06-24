@@ -139,8 +139,8 @@ class ManejadorViajes {
             console.log("ESTA EN LA ESTACION ORIGEN = DESTINO");
             res = [fecha.getHours(), fecha.getHours()];
         }
-        console.log("TERMINO DE BUSCAR", res);
-        console.log(dia, fecha, idOrigen, idDestino);
+        // console.log("TERMINO DE BUSCAR", res);
+        // console.log(dia, fecha, idOrigen, idDestino);
         return res;
     }
 

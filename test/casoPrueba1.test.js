@@ -37,6 +37,7 @@ describe('Test para Caso de Prueba 1', () => {
     }
 
     
+/*
 
     it("1.1 - Cliente Lejos de cualquier estacion y vias del tren", () => {
         let pasajeroFuera ={
@@ -49,7 +50,8 @@ describe('Test para Caso de Prueba 1', () => {
        // console.log(res.tren);
         
     })
-/*
+    */
+
     it("1.2 - Cliente esta en la estacion", () => {
         let pasajeroEstacion ={
             pasajero: enEstacion, // envio la posicion del cliente
@@ -58,8 +60,8 @@ describe('Test para Caso de Prueba 1', () => {
         let manejador = new ManejadorViajes();
         let res=manejador.construirViaje(pasajeroEstacion);
         console.log(res);
-        console.log(res.tren);
+        //console.log(res.tren);
         
     })
-*/
+
 })

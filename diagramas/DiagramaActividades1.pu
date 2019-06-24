@@ -1,0 +1,11 @@
+@startuml
+
+
+(*)--> "Recibir la consulta"
+--> "SituacionPasajero"
+
+--> "Recomendar Estacion"
+
+--> "Enviar Respuesta"
+-->(*)
+@enduml
