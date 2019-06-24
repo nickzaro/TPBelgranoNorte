@@ -7,7 +7,7 @@ const dfi = require('./../Modelo/primitivos/datos/dom-feriados-ida.json');
 const dfv = require('./../Modelo/primitivos/datos/dom-feriados-vuelta.json');
 const estaciones = require('./../Modelo/primitivos/datos/estaciones.json');
 const { distanciaLatLngEnKMRaw, MAX_DISTANCIA, dondeEsta, buscarEstacionCerca,
-    verSiEstaEnViaje, distancias } = require('./../../utilidades/utilidades');
+    verSiEstaEnViaje, distancias, buscarEstacionDondeSalio } = require('./../../utilidades/utilidades');
 const { CargadorViaje } = require('./cargadorViaje');
 const { ManejadorHorarios } = require('./manejadorHorarios');
 class ManejadorViajes {
@@ -51,13 +51,13 @@ class ManejadorViajes {
     construirViaje(pasajeroDestino) {
         let esenario = this.siatuacionPasajero(pasajeroDestino);
         if (esenario === dondeEsta.FUERA) {
-            return this.recomendarEstacion(pasajeroDestino,esenario);
+            return this.recomendarEstacion(pasajeroDestino, esenario);
         }
         if (esenario === dondeEsta.ESTACION) {
-            return this.avisarArriboTren(pasajeroDestino,esenario);
+            return this.avisarArriboTren(pasajeroDestino, esenario);
         }
         if (esenario === dondeEsta.VIAJE) {
-            return this.crearViaje(pasajeroDestino,esenario); //armar el viaje
+            return this.crearViaje(pasajeroDestino, esenario); //armar el viaje
         }
 
     }
@@ -66,6 +66,8 @@ class ManejadorViajes {
     siatuacionPasajero(pasajeroDestino) {
         let [id, distancia] = buscarEstacionCerca(pasajeroDestino.pasajero, this.getEstaciones());
         let estaEnviaje = verSiEstaEnViaje(pasajeroDestino.pasajero, this.getEstaciones(), id);
+       // console.log("estaEnviaje: ", estaEnviaje, " fin");
+       // console.log("pasajero: ", pasajeroDestino, " finPasajero");
         if (distancia < distancias.ESTACION) {
             return dondeEsta.ESTACION;
         }
@@ -75,7 +77,9 @@ class ManejadorViajes {
         if (distancia > distancias.ESTACION) {
             return dondeEsta.FUERA; // para usar solo el camino FUERA
         }
+
         return dondeEsta.DESCONICIDO; // si algo fallo con los calculos
+
     }
 
     actualizarUbicacionViaje() {
@@ -83,13 +87,13 @@ class ManejadorViajes {
     }
 
     //buscar la estacion mas proxima a la persona, aclaro que es doble busqueda
-    recomendarEstacion(pasajeroDestino,escenario) {
+    recomendarEstacion(pasajeroDestino, escenario) {
         //console.log(pasajeroDestino);
         let [id, distancia] = buscarEstacionCerca(pasajeroDestino.pasajero, this.getEstaciones());
         //console.log('HORAA:',new Date());
-        console.log(id, pasajeroDestino.destinoID);
+       // console.log(id, pasajeroDestino.destinoID);
         let res = this.buscarHorario(id, pasajeroDestino.destinoID);
-        
+
         return {
             escenario: escenario,
             estacion: this.getEstaciones().get(id),
@@ -136,39 +140,87 @@ class ManejadorViajes {
             res = [fecha.getHours(), fecha.getHours()];
         }
         console.log("TERMINO DE BUSCAR", res);
-        console.log( dia, fecha, idOrigen, idDestino);
+        console.log(dia, fecha, idOrigen, idDestino);
         return res;
     }
 
     buscarHorariosXRango(idOrigen, idDestino, viajes) {
-        let res =ManejadorHorarios.menorTiempoLlegaEstacion(idOrigen,idDestino,viajes.getRecorridos());
-        let recorrido=this.construirEstacionesNombresConHorarios(res.idViaje,viajes.getRecorridos());
+        let res = ManejadorHorarios.menorTiempoLlegaEstacion(idOrigen, idDestino, viajes.getRecorridos());
+        let recorrido = this.construirEstacionesSinNombresConHorarios(res.idViaje, viajes.getRecorridos());
         return {
+            origen: res.idOrigen,
+            destino: res.idDestino,
+            idViaje: res.idViaje,
+            recorrido: recorrido,
+            horaActual: `${res.horaActual.getUTCHours()}:${res.horaActual.getUTCMinutes()}`,
+            tiempoArribo: `${Math.trunc(res.tiempoMinimo / 3600)}hs ${Math.trunc((res.tiempoMinimo % 3600) / 60)}min`
+
+        };
+    }
+    //hace lo mismo que recomendarEstacion, porque el pasajero
+    //necesita la misma informacion
+    avisarArriboTren(pasajeroDestino, escenario) {
+        return this.recomendarEstacion(pasajeroDestino, escenario);
+    }
+
+    crearViaje(pasajeroDestino, escenario) { // aca se arma el viaje para el pasajero
+        let id = buscarEstacionDondeSalio(pasajeroDestino, this.getEstaciones());
+        //let [id, distancia] = buscarEstacionCerca(pasajeroDestino.pasajero, this.getEstaciones());
+
+        // ahora si id es el id de donde salio el cliente y el res tira valores validos.
+        let posicionActual = pasajeroDestino.pasajero.posicion;
+        let res = this.buscarHorario(id, pasajeroDestino.destinoID);
+
+        //DEBERIA SER ASI,BUSCAR PORQUE
+        //res.idViaje = res.idViaje;
+        //res.recorrido = this.construirEstacionesSinNombresConHorarios(res.idViaje, this.viajesLVI.getRecorridos());
+        // TERMINA 
+
+
+        let d1 = -1, d2 = -1;
+        let idSiguiente = -1;
+        if (res.origen < res.destino) { // viaje de ida
+            idSiguiente = res.origen + 1;
+            d2 = distanciaLatLngEnKMRaw(this.getEstaciones().get(res.origen).ubicacion, this.getEstaciones().get(res.origen + 1).ubicacion);
+            d1 = distanciaLatLngEnKMRaw(posicionActual, this.getEstaciones().get(res.origen + 1).ubicacion);
+            console.log("Distancia1IDA: ", d1);
+            console.log("Distancia2IDA: ", d2);
+        } else if (res.origen > res.destino) { // viaje de vuelta
+            idSiguiente = res.origen - 1;
+            d2 = distanciaLatLngEnKMRaw(this.getEstaciones().get(res.origen).ubicacion, this.getEstaciones().get(res.origen - 1).ubicacion);
+            d1 = distanciaLatLngEnKMRaw(posicionActual, this.getEstaciones().get(res.origen - 1).ubicacion);
+            console.log("Distancia1VUELTA: ", d1);
+            console.log("Distancia2VUELTA: ", d2);
+
+        } else { // en el caso de igualdad no se hace nada
+            // se podria retornar, aviso de no cambio, porque esta en una estacion
+        }
+        let horaOrigen = ManejadorHorarios.horaUTCdeString(res.recorrido.get(res.origen));
+        let horaSiguiente = ManejadorHorarios.horaUTCdeString(res.recorrido.get(idSiguiente));
+        let horaActual = ManejadorHorarios.horaActualUTC();
+
+        console.log("HORA ACTUAL:", horaActual, " HORA ORIGEN:", horaOrigen, " HORA SIGUIENTE: ", horaSiguiente);
+        let horallegadaEstacion = new Date();
+        let restah = Math.trunc((horaSiguiente - horaOrigen) * d1 / d2);
+        console.log(restah);
+        horallegadaEstacion.setMilliseconds(horaActual.getMilliseconds() + restah);
+        horallegadaEstacion.setUTCHours(horallegadaEstacion.getHours());
+        let hora = horaActual + Math.trunc((horaSiguiente - horaOrigen) * d1 / d2);
+        //horallegadaEstacion.setUTCDate(horallegadaEstacion);
+        console.log("HORA LLEGADA ESTACION ", idSiguiente, "  :", horallegadaEstacion);
+
+        /*
+        { res tiene todo esto
             origen:res.idOrigen,
             destino:res.idDestino,
+            idViaje:res.idViaje,
             recorrido: recorrido,
             horaActual:`${res.horaActual.getUTCHours()}:${res.horaActual.getUTCMinutes()}`,
             tiempoArribo:`${Math.trunc(res.tiempoMinimo/3600)}hs ${Math.trunc((res.tiempoMinimo%3600)/60)}min`
 
         };
-/*
-        let res = {
-            idViaje: -1,
-            idOrigen: idOrigen,
-            idDestino: idDestino,
-            horaActual:this.horaActualUTC(),
-            tiempoMinimo:-1
-        };
-*/
-    }
-    //hace lo mismo que recomendarEstacion, porque el pasajero
-    //necesita la misma informacion
-    avisarArriboTren(pasajeroDestino,escenario) {
-        return this.recomendarEstacion(pasajeroDestino,escenario);
-    }
-
-    crearViaje(pasajeroDestino,escenario) { // aca se arma el viaje para el pasajero
-        console.log("Esta en VIAJE :", pasajeroDestino);
+        */
+        return res;
     }
 
 
@@ -185,21 +237,17 @@ class ManejadorViajes {
         return estaciones;
     }
     //idViajeHorario: id del mapa de ViajesDia
-    construirEstacionesNombresConHorarios(idViajeHorario,mapDeViajesDia){
+    construirEstacionesNombresConHorarios(idViajeHorario, mapDeViajesDia) {
         let estacionesConHora = [];
-        for (let [idEstacion, horaEstacion] of mapDeViajesDia.get(idViajeHorario)){
+        for (let [idEstacion, horaEstacion] of mapDeViajesDia.get(idViajeHorario)) {
 
-            estacionesConHora.push([this.getEstaciones().get(idEstacion).nombre,horaEstacion]);
+            estacionesConHora.push([this.getEstaciones().get(idEstacion).nombre, horaEstacion]);
         }
-        return estacionesConHora;       
+        return estacionesConHora;
     }
-    construirEstacionesSinNombresConHorarios(idViajeHorario,mapDeViajesDia){
-        let estacionesConHora = [];
-        for (let [idEstacion, horaEstacion] of mapDeViajesDia.get(idViajeHorario)){
+    construirEstacionesSinNombresConHorarios(idViajeHorario, mapDeViajesDia) {
 
-            estacionesConHora.push([dEstacion,horaEstacion]);
-        }
-        return estacionesConHora;       
+        return mapDeViajesDia.get(idViajeHorario);
     }
 }
 

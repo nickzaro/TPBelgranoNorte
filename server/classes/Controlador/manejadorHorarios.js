@@ -2,11 +2,11 @@ class ManejadorHorarios {
 
     //NO TERMINADO
     static buscarEnElDia(hora, idOrigen, idDestino, mapMapHorario) {
-        console.log(mapMapHorario);
+      //  console.log(mapMapHorario);
         for (let [clave, map] of mapMapHorario) {
 
             if (this.esElHorario(hora, idOrigen, idDestino, map)) {
-                console.log(map);
+             //   console.log(map);
                 return true;
             }
         }
@@ -18,7 +18,7 @@ class ManejadorHorarios {
         }
         let vecHoras = mapHorasAVecHoras(unMapHorario);
 
-        console.log(vecHoras);
+       // console.log(vecHoras);
         let encontrado = false;
         for (let i = 0; i < vecHoras.length - 1; i++) {//tamaño -1  porque tengo que leer el penultimo y sacar el ultimo par comparar
             let hora1 = vecHoras[i][1];
@@ -42,11 +42,11 @@ class ManejadorHorarios {
         let dateHoraI = this.horaUTCdeString(horaI);
         let dateHoraF = this.horaUTCdeString(horaF);
 
-        console.log("hora actual:", dateHora);
+      //  console.log("hora actual:", dateHora);
         if (dateHoraF < dateHoraI) {
             dateHoraF.setDate(dateHoraF.getDate() + 1);
         }
-        console.log(dateHoraI, "<=", dateHora, "<=", dateHoraF);
+     //   console.log(dateHoraI, "<=", dateHora, "<=", dateHoraF);
         if (dateHoraI <= dateHora && dateHora <= dateHoraF) {
             return true;
         }
@@ -72,10 +72,8 @@ class ManejadorHorarios {
                 res.tiempoMinimo = tiempoMinimo;
             }
         }
-        //FALTA ARMAR CON LAS NOMBRES DE ESTACIONES,
-        //EL ORIGEN ; EL DESTINO ; TIEMPO ACTUAL
-        console.log(mapMapHorario.get(res.idViaje));
-        console.log(res);
+        // console.log(mapMapHorario.get(res.idViaje));
+       // console.log(res);
         return res;
     }
     // tiempo entre la hora actual y un recorrido para una estacion dada

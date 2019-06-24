@@ -1,5 +1,5 @@
 const { Posicion } = require('./../classes/Modelo/primitivos/Posicion');
-const  turf = require('@turf/turf');
+const turf = require('@turf/turf');
 
 //definicion de las estructuras que se maneja
 
@@ -89,6 +89,35 @@ function buscarEstacionCerca(pasajero, estaciones) {
     return idDistancia;
 }
 
+
+//supongo que son excluyentes las comparaciones
+function buscarEstacionDondeSalio(pasajero, estaciones) {
+    let cerca = buscarEstacionCerca(pasajero.pasajero, estaciones);
+    let ultima = pasajero.destinoID;
+    let pposicion = pasajero.pasajero.posicion;
+    let salio = -1;
+    console.log("ULTIMA ", pasajero.destinoID);
+    if (distanciaLatLngEnKMRaw(estaciones.get(cerca[0]).ubicacion, estaciones.get(ultima).ubicacion) >
+        distanciaLatLngEnKMRaw(pposicion, estaciones.get(ultima).ubicacion)) {
+        salio = cerca[0];
+    }
+
+    if (estaciones.has(cerca[0] - 1)) {
+        if (distanciaLatLngEnKMRaw(estaciones.get(cerca[0] - 1).ubicacion, estaciones.get(ultima).ubicacion) >
+            distanciaLatLngEnKMRaw(pposicion, estaciones.get(ultima).ubicacion)) {
+            salio = cerca[0] - 1;
+        }
+    }
+    if (estaciones.has(cerca[0] + 1)) {
+        if (distanciaLatLngEnKMRaw(estaciones.get(cerca[0] + 1).ubicacion, estaciones.get(ultima).ubicacion) >
+            distanciaLatLngEnKMRaw(pposicion, estaciones.get(ultima).ubicacion)) {
+            salio = cerca[0] + 1;
+        }
+    }
+    return salio; //HARDCODEADA
+}
+
+
 // si el pEvaluar se encuentra entre los dos puntos con un ancho de VIAJE=+-0.02
 function distanciaporRangoEnCamino(pInicial, pFinal, pEvaluar) {
     let pEval = turf.point(pEvaluar);
@@ -104,7 +133,7 @@ function verSiEstaEnViaje(pasajero, estaciones, idCercana) {
     let idOtraEstacion = -1;
     if (estaciones.has(idMenos1)) {
         let estMenos1 = estaciones.get(idMenos1);
-        console.log(estMenos1.ubicacion, estacion.ubicacion, pasajero.posicion);
+        //console.log(estMenos1.ubicacion, estacion.ubicacion, pasajero.posicion);
         let distMenos1 = distanciaporRangoEnCamino(estMenos1.ubicacion, estacion.ubicacion, pasajero.posicion);
         if (distMenos1 <= distancias.VIAJE) { // estaria en viaje
             idOtraEstacion = estMenos1;
@@ -143,5 +172,5 @@ function decimalAHora(horaDecimal) {
 module.exports = {
     distanciaLatLngEnKMRaw, dondeEsta, buscarEstacionCerca,
     horaADecimal, decimalAHora, distancias, distanciaporRangoEnCamino,
-    verSiEstaEnViaje
+    verSiEstaEnViaje, buscarEstacionDondeSalio
 }

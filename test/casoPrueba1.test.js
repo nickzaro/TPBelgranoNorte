@@ -46,7 +46,7 @@ describe('Test para Caso de Prueba 1', () => {
         let manejador = new ManejadorViajes();
         let res=manejador.construirViaje(pasajeroFuera);
         console.log(res);
-        console.log(res.tren);
+       // console.log(res.tren);
         
     })
 /*

@@ -5,10 +5,9 @@ const { Tren } = require('../Modelo/tren');
 const estaciones = require('./estaciones.json');
 
 class viaje {
-    constructor(id, nombre, descripcion) {
+    constructor(id, nombre) {
         this.id = id;
         this.nombre = nombre;
-        this.descripcion = descripcion;
         this.representante = new Representante();
         this.tren = new Tren();
     }
