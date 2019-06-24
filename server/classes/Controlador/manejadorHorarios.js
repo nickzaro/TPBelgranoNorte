@@ -59,8 +59,9 @@ class ManejadorHorarios {
         let tiempo = 0;
         let res = {
             idViaje: -1,
-            idEstacion: idOrigen,
-            idTiempo:this.horaActualUTC(),
+            idOrigen: idOrigen,
+            idDestino: idDestino,
+            horaActual:this.horaActualUTC(),
             tiempoMinimo:-1
         };
         for (let [clave, map] of mapMapHorario) {

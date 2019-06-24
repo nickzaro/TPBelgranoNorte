@@ -18,6 +18,7 @@ let enEstacion = {
     posicion: [-34.5901393264139, -58.37371945381165]
 }
 
+
 socket.on('connect', () => {
     console.log("me conecte al servidor");
 });
@@ -80,7 +81,7 @@ function agregarALista(estacion) {
     if (nuevoLi.length > 0) {
         var li = document.createElement('li');
         li.id = estacion.id;
-        li.innerHTML = "<span onclick='seleccionar(this)'> o </span>" + nuevoLi;
+        li.innerHTML = `<span onclick='seleccionar(this)'> ${ nuevoLi}</span>`;
         document.getElementById("listas").appendChild(li);
 
     }

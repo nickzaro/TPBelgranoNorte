@@ -64,7 +64,7 @@ describe('Test para ManejadorHorarios', () => {
     it("funcion menorTiempoLLegaEstacion", () => {
         let manejador = new ManejadorViajes();
         let idOrigen = 6;
-        let idDestino = 15;
+        let idDestino = 20;
         ManejadorHorarios.menorTiempoLlegaEstacion(idOrigen, idDestino, manejador.viajesSHI.recorridos);
     })
 

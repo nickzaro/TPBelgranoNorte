@@ -12,7 +12,9 @@ class CargadorViaje {
         }
 
     }
-
+    getRecorridos() {
+        return this.recorridos;
+    }
     procesar(funcion) {
         let i = 0;
         this.grilla.forEach(element => {
@@ -32,7 +34,7 @@ class CargadorViaje {
             }
             i--;
         });
-     //console.log(rec);
+        //console.log(rec);
         return rec;
 
     }
@@ -45,7 +47,7 @@ class CargadorViaje {
             }
             i++;
         });
-         //console.log(rec);
+        //console.log(rec);
         return rec;
     }
     empaquetar(i) { // seria empaquetar un recorrido

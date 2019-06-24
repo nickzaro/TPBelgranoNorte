@@ -6,6 +6,8 @@
   "scripts": {
     "test": "mocha",
     "testa": "mocha ./test/manejadorHorarios.test.js",
+    "caso1": "mocha ./test/casoPrueba1.test.js",
+    "caso2": "mocha ./test/casoPrueba2.test.js",
     "dev": "nodemon index.js",
     "start": "node index.js"
   },
