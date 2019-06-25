@@ -2,9 +2,9 @@
 
 
 (*)--> "Recibir la consulta"
---> "SituacionPasajero - (Estacion o Lejos)"
+--> "SituacionPasajero - (En viaje)"
 
---> "Recomendar Estacion"
+--> "Cacular Retraso"
 
 --> "Enviar Respuesta"
 -->(*)

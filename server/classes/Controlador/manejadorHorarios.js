@@ -90,6 +90,45 @@ class ManejadorHorarios {
         return  (horaDate - horaDateActual)/1000;
 
     }
+ // Menor estacion origen que tiene el menor tiempo
+    static menorTiempoSalidaEstacion(idOrigen, idDestino, mapMapHorario) {
+        let tiempoMinimo = 10000000;
+        let tiempo = 0;
+        let res = {
+            idViaje: -1,
+            idOrigen: idOrigen,
+            idDestino: idDestino,
+            horaActual:this.horaActualUTC(),
+            tiempoMinimo:-1
+        };
+        for (let [clave, map] of mapMapHorario) {
+            tiempo = this.tiempoAnteriorSegunID(idOrigen,idDestino,map);
+            if(tiempo > 0 && tiempoMinimo>=tiempo){
+                tiempoMinimo = tiempo;
+                res.idViaje = clave;
+                res.tiempoMinimo = tiempoMinimo;
+            }
+        }
+        console.log(mapMapHorario.get(res.idViaje-1));
+         console.log(mapMapHorario.get(res.idViaje));
+         console.log(mapMapHorario.get(res.idViaje+1));
+       // console.log(res);
+        return res;
+    }
+// el menor tiempo de la posicion - el origen
+    static tiempoAnteriorSegunID(idOrigen, idDestino, mapHorario) {
+        if (!mapHorario.has(idOrigen) || !mapHorario.has(idDestino)) { // si no esta el origen y destino en el mapa
+            return -1;
+        }
+        let mapHorariosDate = this.stringHorasADate(mapHorario);
+        let horaDateActual = this.horaActualUTC();
+        let horaDate = mapHorariosDate.get(idOrigen);
+       // console.log(horaDateActual);
+       // console.log(horaDate);
+       // console.log((horaDate-horaDateActual)/1000);
+        return  (horaDateActual-horaDate)/1000;
+
+    }
 
     static stringHorasADate(mapHorario) {
         let mapHorariosDate = new Map();

@@ -14,6 +14,10 @@ class Socket{
     +emit()
 }
 
+class ManejadorHorarios{
++menorTiempoSalidaEstacion(idO,idD,horarios)
++menorTiempoLLegaEstacion(idO,idD,horarios)
+}
 class Pasajero{
 
 }
@@ -39,6 +43,7 @@ class Viaje{
     +informacionRepresentante()
     +informacionTren()
 }
+ManejadorHorarios - ManejadorDeViajes : < usa
 ManejadorDeViajes - Socket : usa >
 ManejadorDeViajes o-- CargadorViaje
 ManejadorDeViajes *-- Viaje

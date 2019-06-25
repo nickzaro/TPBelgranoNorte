@@ -60,12 +60,21 @@ describe('Test para ManejadorHorarios', () => {
               ManejadorHorarios.tiempoSegunID(idOrigen,idDestino,manejador.viajesSHI.recorridos.get(79)); 
           })
     */
-
+/*
     it("funcion menorTiempoLLegaEstacion", () => {
         let manejador = new ManejadorViajes();
         let idOrigen = 6;
         let idDestino = 20;
         ManejadorHorarios.menorTiempoLlegaEstacion(idOrigen, idDestino, manejador.viajesSHI.recorridos);
+    })
+
+*/
+    it("funcion  menorTiempoSalidaEstacion", () => {
+        let manejador = new ManejadorViajes();
+        let idOrigen = 6;
+        let idDestino = 20;
+        let res1=ManejadorHorarios.menorTiempoSalidaEstacion(idOrigen, idDestino, manejador.viajesLVI.recorridos);
+        console.log(res1);
     })
 
 })
