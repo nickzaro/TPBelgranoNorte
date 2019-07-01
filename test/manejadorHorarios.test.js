@@ -1,7 +1,7 @@
 const { ManejadorHorarios } = require('./../server/classes/Controlador/manejadorHorarios');
 const { ManejadorViajes } = require('./../server/classes/Controlador/manejador.viajes');
 const expect = require('chai').expect;
-
+ManejadorHorarios.modHoraActual("2019-07-01T20:20:00.100Z");
 describe('Test para ManejadorHorarios', () => {
 
     /*
@@ -69,12 +69,13 @@ describe('Test para ManejadorHorarios', () => {
     })
 
 */
+/*
     it("funcion  menorTiempoSalidaEstacion", () => {
         let manejador = new ManejadorViajes();
         let idOrigen = 6;
         let idDestino = 20;
-        let res1=ManejadorHorarios.menorTiempoSalidaEstacion(idOrigen, idDestino, manejador.viajesLVI.recorridos);
+        let res1=ManejadorHorarios.menorTiempoSalidaEstacion(idOrigen, idDestino, manejador.grilla.get(0));
         console.log(res1);
     })
-
+*/
 })

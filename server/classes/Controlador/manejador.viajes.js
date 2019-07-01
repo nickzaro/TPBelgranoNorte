@@ -243,17 +243,16 @@ class ManejadorViajes {
         let horaSiguiente = ManejadorHorarios.horaUTCdeString(res.recorrido.get(idSiguiente));
         let horaActual = ManejadorHorarios.horaActualUTC();
 
-       console.log("HORA ACTUAL:", horaActual, " HORA ORIGEN:", horaOrigen, " HORA SIGUIENTE: ", horaSiguiente);
+       // console.log("HORA ACTUAL:", horaActual, " HORA ORIGEN:", horaOrigen, " HORA SIGUIENTE: ", horaSiguiente);
         let horallegadaEstacion = new Date(ManejadorHorarios.horaActualUTC()); // para copiar Horas
         //horallegadaEstacion.setUTCHours(ManejadorHorarios.horaActualUTC().getHours());
         let restah = Math.trunc((horaSiguiente - horaOrigen) * d1 / d2);
-        // console.log(restah);
         //horallegadaEstacion.setUTCHours(horallegadaEstacion.getHours());
         horallegadaEstacion.setMilliseconds(horaActual.getMilliseconds()+restah);
         
         // let hora = horaActual + Math.trunc((horaSiguiente - horaOrigen) * d1 / d2);
         // horallegadaEstacion.setUTCDate(horallegadaEstacion.getDate());
-        console.log("HORA LLEGADA ESTACION ", idSiguiente, "  :", horallegadaEstacion);
+        // console.log("HORA LLEGADA ESTACION ", idSiguiente, "  :", horallegadaEstacion);
         let resultado = {
             origen:res.origen,
             destino: res.destino,
@@ -264,19 +263,7 @@ class ManejadorViajes {
             horaDeberia:`${horaSiguiente.getUTCHours()}:${horaSiguiente.getUTCMinutes()}`,
             retraso: `${Math.trunc((horallegadaEstacion.getHours()-horaSiguiente.getHours())/3600)}hs ${Math.trunc(horallegadaEstacion.getMinutes()-horaSiguiente.getMinutes())}min`
         }
-        /*
-        { res tiene todo esto
-            origen:res.idOrigen,
-            destino:res.idDestino,
-            idViaje:res.idViaje,
-            recorrido: recorrido,
-            horaActual:`${res.horaActual.getUTCHours()}:${res.horaActual.getUTCMinutes()}`,
-            tiempoArribo:`${Math.trunc(res.tiempoMinimo/3600)}hs ${Math.trunc((res.tiempoMinimo%3600)/60)}min`
-
-        };
-        */
-
-        //ESTO ES LA RESPUESTA PARA EL CLIENTE, FORMEAR PARA ENTREGAR SOLO LO NECESARIO
+        
         return resultado;
     }
 

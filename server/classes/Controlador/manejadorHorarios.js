@@ -135,7 +135,7 @@ class ManejadorHorarios {
     static stringHorasADate(mapHorario) {
         let mapHorariosDate = new Map();
         let noAnterior = true;
-        let anterior = new Date();
+        let anterior = new Date(this.horaActualUTC());
         for (let [clave, hora] of mapHorario) {//tamaño -1  porque tengo que leer el penultimo y sacar el ultimo par comparar
 
             let dateHora1 = this.horaUTCdeString(hora);
@@ -178,7 +178,7 @@ class ManejadorHorarios {
         return dateHora;
     }
     static horaActualUTC(hora) {
-        console.log("HORAMOD:", horaMod);
+        // console.log("HORAMOD:", horaMod);
         if (horaMod != undefined){
             let horaR = horaMod;
             return horaR;
