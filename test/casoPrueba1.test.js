@@ -44,6 +44,7 @@ describe('Test para Caso de Prueba 1', () => {
             pasajero: enFuera, // envio la posicion del cliente
             destinoID: 10 // envio el id de la estacion de destino
         }
+        ManejadorHorarios.modHoraActual("2019-07-01T20:20:00.100Z");
         let manejador = new ManejadorViajes();
         let res=manejador.construirViaje(pasajeroFuera);
         console.log(res);
@@ -58,6 +59,7 @@ describe('Test para Caso de Prueba 1', () => {
             pasajero: enEstacion, // envio la posicion del cliente
             destinoID: 10 // envio el id de la estacion de destino
         }
+        ManejadorHorarios.modHoraActual("2019-07-01T20:20:00.100Z");
         let manejador = new ManejadorViajes();
         let res=manejador.construirViaje(pasajeroEstacion);
         console.log(res);

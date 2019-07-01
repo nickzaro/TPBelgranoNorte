@@ -86,7 +86,20 @@ class ManejadorViajes {
     recomendarEstacion(pasajeroDestino, escenario) {
         let [id, distancia] = buscarEstacionCerca(pasajeroDestino.pasajero, this.getEstaciones());
         let res = this.buscarHorario(id, pasajeroDestino.destinoID);
-        return res;
+        
+        let respuesta = {
+            escenario: escenario,
+            estacion: this.getEstaciones().get(id),
+            origen: res.origen,
+            distancia: distancia,
+            destino: res.destino,
+            idViaje: res.idViaje,
+            recorrido: res.recorrido,
+            horaActual: res.horaActual,
+            tiempoArribo: res.tiempoArribo
+        }
+        
+        return respuesta;
         
         /*{
             escenario: escenario,
@@ -178,6 +191,7 @@ class ManejadorViajes {
     buscarHorariosXRangoMayor(idOrigen, idDestino, viajes) {
         let res = ManejadorHorarios.menorTiempoSalidaEstacion(idOrigen, idDestino, viajes.getRecorridos());
         let recorrido = this.construirEstacionesSinNombresConHorarios(res.idViaje, viajes.getRecorridos());
+        // console.log("RECORRRIDOS:", res);
         return {
             origen: res.idOrigen,
             destino: res.idDestino,
@@ -206,6 +220,8 @@ class ManejadorViajes {
         let idSiguiente = -1;
         if (res.origen < res.destino) { // viaje de ida
             idSiguiente = res.origen + 1;
+
+            // ESTO DA ERROR CUANDO NO FUNCIONA EL TREN PUES NO HAY UN HORARIO MENOR A LA HORA ACTUAL; ES DECIR NO PUEDE ESTAR EN VIAJE
             d2 = distanciaLatLngEnKMRaw(this.getEstaciones().get(res.origen).ubicacion, this.getEstaciones().get(res.origen + 1).ubicacion);
             d1 = distanciaLatLngEnKMRaw(posicionActual, this.getEstaciones().get(res.origen + 1).ubicacion);
            // console.log("Distancia1IDA: ", d1);
@@ -220,19 +236,24 @@ class ManejadorViajes {
         } else { // en el caso de igualdad no se hace nada
             // se podria retornar, aviso de no cambio, porque esta en una estacion
         }
+
+        // ESTA bien si da error cuando no funciona ningun tren pues la hora actual asume que salio algun tren
+        // SI ASI QUE VER ESTO DE  TIRAR ALGUN ERROR Y LISTO
         let horaOrigen = ManejadorHorarios.horaUTCdeString(res.recorrido.get(res.origen));
         let horaSiguiente = ManejadorHorarios.horaUTCdeString(res.recorrido.get(idSiguiente));
         let horaActual = ManejadorHorarios.horaActualUTC();
 
-       // console.log("HORA ACTUAL:", horaActual, " HORA ORIGEN:", horaOrigen, " HORA SIGUIENTE: ", horaSiguiente);
-        let horallegadaEstacion = new Date();
+       console.log("HORA ACTUAL:", horaActual, " HORA ORIGEN:", horaOrigen, " HORA SIGUIENTE: ", horaSiguiente);
+        let horallegadaEstacion = new Date(ManejadorHorarios.horaActualUTC()); // para copiar Horas
+        //horallegadaEstacion.setUTCHours(ManejadorHorarios.horaActualUTC().getHours());
         let restah = Math.trunc((horaSiguiente - horaOrigen) * d1 / d2);
         // console.log(restah);
-        horallegadaEstacion.setMilliseconds(horaActual.getMilliseconds() + restah);
-        horallegadaEstacion.setUTCHours(horallegadaEstacion.getHours());
+        //horallegadaEstacion.setUTCHours(horallegadaEstacion.getHours());
+        horallegadaEstacion.setMilliseconds(horaActual.getMilliseconds()+restah);
+        
         // let hora = horaActual + Math.trunc((horaSiguiente - horaOrigen) * d1 / d2);
-        //horallegadaEstacion.setUTCDate(horallegadaEstacion.getDate());
-       // console.log("HORA LLEGADA ESTACION ", idSiguiente, "  :", horallegadaEstacion);
+        // horallegadaEstacion.setUTCDate(horallegadaEstacion.getDate());
+        console.log("HORA LLEGADA ESTACION ", idSiguiente, "  :", horallegadaEstacion);
         let resultado = {
             origen:res.origen,
             destino: res.destino,
