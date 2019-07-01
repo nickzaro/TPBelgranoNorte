@@ -3,7 +3,7 @@ const { ManejadorViajes } = require('./../server/classes/Controlador/manejador.v
 const fs = require('fs');
 const expect = require('chai').expect;
 
-describe('Test para Caso de Prueba 1', () => {
+describe('Test para Caso de Prueba 2', () => {
 
     var dondeEsta = {
         ESTACION: 0,

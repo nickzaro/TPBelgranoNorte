@@ -96,7 +96,7 @@ function buscarEstacionDondeSalio(pasajero, estaciones) {
     let ultima = pasajero.destinoID;
     let pposicion = pasajero.pasajero.posicion;
     let salio = -1;
-    console.log("ULTIMA ", pasajero.destinoID);
+   // console.log("ULTIMA ", pasajero.destinoID);
     if (distanciaLatLngEnKMRaw(estaciones.get(cerca[0]).ubicacion, estaciones.get(ultima).ubicacion) >
         distanciaLatLngEnKMRaw(pposicion, estaciones.get(ultima).ubicacion)) {
         salio = cerca[0];

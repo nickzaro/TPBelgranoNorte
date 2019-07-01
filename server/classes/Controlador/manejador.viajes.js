@@ -10,44 +10,43 @@ const { distanciaLatLngEnKMRaw, MAX_DISTANCIA, dondeEsta, buscarEstacionCerca,
     verSiEstaEnViaje, distancias, buscarEstacionDondeSalio } = require('./../../utilidades/utilidades');
 const { CargadorViaje } = require('./cargadorViaje');
 const { ManejadorHorarios } = require('./manejadorHorarios');
+const DIASENTIDO = {
+    LVI: 0,
+    LVV: 1,
+    SHI: 2,
+    SHV: 3,
+    DFI: 4,
+    DFV: 5,
+    NOEXISTE: -1
+}
 class ManejadorViajes {
     constructor() {
+        this.grilla = new Map(); // guarda la grilla de viajes publicada
         this.cargarEstaciones();
         this.cargarViajes();
-        this.viajes = new Map(); //guarda los distintos viajes
     }
+
+    // carga las estaciones que existen
     cargarEstaciones() {
         this.estaciones = new Map();
         for (let estacion of estaciones) {
             this.estaciones.set(estacion.id, estacion);
         }
-        //console.log(this.estaciones);
     }
 
+    // carga los viajes 
     cargarViajes() {
-        this.viajesLVI = new CargadorViaje(lvi, this.estaciones, "ida");
-        this.viajesLVV = new CargadorViaje(lvv, this.estaciones, "vuelta");
-        this.viajesSHI = new CargadorViaje(shi, this.estaciones, "ida");
-        this.viajesSHV = new CargadorViaje(shv, this.estaciones, "vuelta");
-        this.viajesDFI = new CargadorViaje(dfi, this.estaciones, "ida");
-        this.viajesDFV = new CargadorViaje(dfv, this.estaciones, "vuelta");
         // console.log(this.viajesLVI);
+        this.grilla.set(DIASENTIDO.LVI, new CargadorViaje(lvi, this.estaciones, "ida"));
+        this.grilla.set(DIASENTIDO.LVV, new CargadorViaje(lvv, this.estaciones, "vuelta"));
+        this.grilla.set(DIASENTIDO.SHI, new CargadorViaje(shi, this.estaciones, "ida"));
+        this.grilla.set(DIASENTIDO.SHV, new CargadorViaje(shv, this.estaciones, "vuelta"));
+        this.grilla.set(DIASENTIDO.DFI, new CargadorViaje(dfi, this.estaciones, "ida"));
+        this.grilla.set(DIASENTIDO.DFV, new CargadorViaje(dfv, this.estaciones, "vuelta"));
+
     }
 
-    procesarPeticion(pasajero) {
-        console.log("realizar validaciones");
-        console.log("armar viaje");
-        console.log("agregar el viajero para ser representado ");
-        return pasajero;
-    }
-
-    /* 
-    esto debe devolver algo del estilo
-    {
-        dondeEsta, //para que sepa que hacer el front
-        datos necesarios para renderizar el front
-    }
-    */
+    // recibe informacion del pasajero, calcula el escenario y llama de acuerdo a esto
     construirViaje(pasajeroDestino) {
         let esenario = this.siatuacionPasajero(pasajeroDestino);
         if (esenario === dondeEsta.FUERA) {
@@ -61,86 +60,52 @@ class ManejadorViajes {
         }
 
     }
-    // necesario cuando el viaje este en curso creado y andando osea el ciclo comun
 
+    // Calcula en que situacion se haya el pasajero:FUERA,ESTACION o viaje.
     siatuacionPasajero(pasajeroDestino) {
         let [id, distancia] = buscarEstacionCerca(pasajeroDestino.pasajero, this.getEstaciones());
         let estaEnviaje = verSiEstaEnViaje(pasajeroDestino.pasajero, this.getEstaciones(), id);
-       // console.log("estaEnviaje: ", estaEnviaje, " fin");
-       // console.log("pasajero: ", pasajeroDestino, " finPasajero");
         if (distancia < distancias.ESTACION) {
             return dondeEsta.ESTACION;
         }
         if ((estaEnviaje[0] != -1) && (distancia > distancias.ESTACION)) {
-            return dondeEsta.VIAJE; //ACA se Arma el 
+            return dondeEsta.VIAJE; // su esta viajando
         }
         if (distancia > distancias.ESTACION) {
             return dondeEsta.FUERA; // para usar solo el camino FUERA
         }
 
         return dondeEsta.DESCONICIDO; // si algo fallo con los calculos
-
     }
 
     actualizarUbicacionViaje() {
 
     }
 
-    //buscar la estacion mas proxima a la persona, aclaro que es doble busqueda
+    //buscar la estacion mas proxima a la persona
     recomendarEstacion(pasajeroDestino, escenario) {
-        //console.log(pasajeroDestino);
         let [id, distancia] = buscarEstacionCerca(pasajeroDestino.pasajero, this.getEstaciones());
-        //console.log('HORAA:',new Date());
-       // console.log(id, pasajeroDestino.destinoID);
         let res = this.buscarHorario(id, pasajeroDestino.destinoID);
-
-        return {
+        return res;
+        
+        /*{
             escenario: escenario,
             estacion: this.getEstaciones().get(id),
             distancia: distancia,
             tren: res
-        }
+        }*/
     }
-    // el destino lo necesito para saber para donde se dirige
+    // busca el horario de llegada mas proximo a idOrigen segun el horario
     buscarHorario(idOrigen, idDestino) {
         let fecha = ManejadorHorarios.horaActualUTC();
         let dia = fecha.getDay();
         let res = ["ERROR", "ERROR"];
-        if (idOrigen < idDestino) {
-            if (dia > 0 && dia < 6) { //dia de la semana e ida
-                res = this.buscarHorariosXRango(idOrigen, idDestino, this.viajesLVI);
-            }
-            else if (dia === 6) { //sabado e ida
-                res = this.buscarHorariosXRango(idOrigen, idDestino, this.viajesSHI);
-            }
-            else if (dia === 0) { //domingo e ida
-                res = this.buscarHorariosXRango(idOrigen, idDestino, this.viajesDFI);
-            }
-            else {
-                //NOEXISTE EL DIA
-                console.error("NO EXISTE EL DIA: ", dia);
-            }
-        }
-        else if (idOrigen > idDestino) {
-            if (dia > 0 && dia < 6) { //dia de la semana y vuelta
-                res = this.buscarHorariosXRango(idOrigen, idDestino, this.viajesLVV);
-            }
-            if (dia === 6) { //sabado y ida
-                res = this.buscarHorariosXRango(idOrigen, idDestino, this.viajesSHV);
-            }
-            if (dia === 0) { //domingo y ida
-                res = this.buscarHorariosXRango(idOrigen, idDestino, this.viajesDFV);
-            } else {
-                //NOEXISTE EL DIA
-                console.error("NO EXISTE EL DIA: ", dia);
-            }
-        }
-        else if (idOrigen === idDestino) {
+        //console.log( this.grilla.get(this.decidirDiaFecha(idOrigen, idDestino)));
+        res = this.buscarHorariosXRango(idOrigen, idDestino, this.grilla.get(this.decidirDiaFecha(idOrigen, idDestino)));
+        if (idOrigen === idDestino) {
             console.log("ESTA EN LA ESTACION ORIGEN = DESTINO");
             res = [fecha.getHours(), fecha.getHours()];
         }
-        // console.log("TERMINO DE BUSCAR", res);
-        // console.log(dia, fecha, idOrigen, idDestino);
         return res;
     }
 
@@ -154,49 +119,60 @@ class ManejadorViajes {
             recorrido: recorrido,
             horaActual: `${res.horaActual.getUTCHours()}:${res.horaActual.getUTCMinutes()}`,
             tiempoArribo: `${Math.trunc(res.tiempoMinimo / 3600)}hs ${Math.trunc((res.tiempoMinimo % 3600) / 60)}min`
-
         };
     }
 
-    buscarHorarioMayor(idOrigen, idDestino) {
+    decidirDiaFecha(idOrigen, idDestino) {
         let fecha = ManejadorHorarios.horaActualUTC();
         let dia = fecha.getDay();
-        let res = ["ERROR", "ERROR"];
-        if (idOrigen < idDestino) {
+        let res = -1;
+
+        // si es la misma estacion recomendar de IDA o VUELTA, elijo ida
+        if (idOrigen <= idDestino) {
             if (dia > 0 && dia < 6) { //dia de la semana e ida
-                res = this.buscarHorariosXRangoMayor(idOrigen, idDestino, this.viajesLVI);
+                res = DIASENTIDO.LVI;
             }
             else if (dia === 6) { //sabado e ida
-                res = this.buscarHorariosXRangoMayor(idOrigen, idDestino, this.viajesSHI);
+                res = DIASENTIDO.SHI;
             }
             else if (dia === 0) { //domingo e ida
-                res = this.buscarHorariosXRangoMayor(idOrigen, idDestino, this.viajesDFI);
+                res = DIASENTIDO.DFI;
             }
             else {
                 //NOEXISTE EL DIA
                 console.error("NO EXISTE EL DIA: ", dia);
+              //  res = DIASENTIDO.NOEXISTE;
             }
         }
         else if (idOrigen > idDestino) {
             if (dia > 0 && dia < 6) { //dia de la semana y vuelta
-                res = this.buscarHorariosXRangoMayor(idOrigen, idDestino, this.viajesLVV);
+                res = DIASENTIDO.LVV;
             }
-            if (dia === 6) { //sabado y ida
-                res = this.buscarHorariosXRangoMayor(idOrigen, idDestino, this.viajesSHV);
+            if (dia === 6) { //sabado y vuelta
+                res = DIASENTIDO.SHV;
             }
-            if (dia === 0) { //domingo y ida
-                res = this.buscarHorariosXRangoMayor(idOrigen, idDestino, this.viajesDFV);
+            if (dia === 0) { //domingo y vuelta
+                res = DIASENTIDO.DFV;
             } else {
                 //NOEXISTE EL DIA
                 console.error("NO EXISTE EL DIA: ", dia);
+               // res = DIASENTIDO.NOEXISTE;
             }
         }
-        else if (idOrigen === idDestino) {
+        return res;
+    }
+
+    // Si el pasajero salio de la estacion, saber en que horario se encuentra
+    buscarHorarioMayor(idOrigen, idDestino) {
+        let fecha = ManejadorHorarios.horaActualUTC();
+        let dia = fecha.getDay();
+        let res = ["ERROR", "ERROR"];
+
+        res = this.buscarHorariosXRangoMayor(idOrigen, idDestino, this.grilla.get(this.decidirDiaFecha(idOrigen, idDestino)));
+        if (idOrigen === idDestino) {
             console.log("ESTA EN LA ESTACION ORIGEN = DESTINO");
             res = [fecha.getHours(), fecha.getHours()];
         }
-        // console.log("TERMINO DE BUSCAR", res);
-        // console.log(dia, fecha, idOrigen, idDestino);
         return res;
     }
     buscarHorariosXRangoMayor(idOrigen, idDestino, viajes) {
@@ -209,29 +185,22 @@ class ManejadorViajes {
             recorrido: recorrido,
             horaActual: `${res.horaActual.getUTCHours()}:${res.horaActual.getUTCMinutes()}`,
             tiempoArribo: `${Math.trunc(res.tiempoMinimo / 3600)}hs ${Math.trunc((res.tiempoMinimo % 3600) / 60)}min`
-
         };
     }
+   
     //hace lo mismo que recomendarEstacion, porque el pasajero
     //necesita la misma informacion
     avisarArriboTren(pasajeroDestino, escenario) {
         return this.recomendarEstacion(pasajeroDestino, escenario);
     }
 
-    // cuando el pasajero esta viajando, ver si hay retraso o no y de cuanto
-    crearViaje(pasajeroDestino, escenario) { // aca se arma el viaje para el pasajero
+    // cuando el pasajero esta en VIAJE
+    crearViaje(pasajeroDestino, escenario) {
         let id = buscarEstacionDondeSalio(pasajeroDestino, this.getEstaciones());
-        //let [id, distancia] = buscarEstacionCerca(pasajeroDestino.pasajero, this.getEstaciones());
 
-        // ahora si id es el id de donde salio el cliente y el res tira valores validos.
+        //id es donde salio el cliente
         let posicionActual = pasajeroDestino.pasajero.posicion;
         let res = this.buscarHorarioMayor(id, pasajeroDestino.destinoID);
-
-        //DEBERIA SER ASI,BUSCAR PORQUE
-        //res.idViaje = res.idViaje;
-        //res.recorrido = this.construirEstacionesSinNombresConHorarios(res.idViaje, this.viajesLVI.getRecorridos());
-        // TERMINA 
-
 
         let d1 = -1, d2 = -1;
         let idSiguiente = -1;
@@ -239,14 +208,14 @@ class ManejadorViajes {
             idSiguiente = res.origen + 1;
             d2 = distanciaLatLngEnKMRaw(this.getEstaciones().get(res.origen).ubicacion, this.getEstaciones().get(res.origen + 1).ubicacion);
             d1 = distanciaLatLngEnKMRaw(posicionActual, this.getEstaciones().get(res.origen + 1).ubicacion);
-            console.log("Distancia1IDA: ", d1);
-            console.log("Distancia2IDA: ", d2);
+           // console.log("Distancia1IDA: ", d1);
+           // console.log("Distancia2IDA: ", d2);
         } else if (res.origen > res.destino) { // viaje de vuelta
             idSiguiente = res.origen - 1;
             d2 = distanciaLatLngEnKMRaw(this.getEstaciones().get(res.origen).ubicacion, this.getEstaciones().get(res.origen - 1).ubicacion);
             d1 = distanciaLatLngEnKMRaw(posicionActual, this.getEstaciones().get(res.origen - 1).ubicacion);
-            console.log("Distancia1VUELTA: ", d1);
-            console.log("Distancia2VUELTA: ", d2);
+           // console.log("Distancia1VUELTA: ", d1);
+           // console.log("Distancia2VUELTA: ", d2);
 
         } else { // en el caso de igualdad no se hace nada
             // se podria retornar, aviso de no cambio, porque esta en una estacion
@@ -255,16 +224,25 @@ class ManejadorViajes {
         let horaSiguiente = ManejadorHorarios.horaUTCdeString(res.recorrido.get(idSiguiente));
         let horaActual = ManejadorHorarios.horaActualUTC();
 
-        console.log("HORA ACTUAL:", horaActual, " HORA ORIGEN:", horaOrigen, " HORA SIGUIENTE: ", horaSiguiente);
+       // console.log("HORA ACTUAL:", horaActual, " HORA ORIGEN:", horaOrigen, " HORA SIGUIENTE: ", horaSiguiente);
         let horallegadaEstacion = new Date();
         let restah = Math.trunc((horaSiguiente - horaOrigen) * d1 / d2);
-        console.log(restah);
+        // console.log(restah);
         horallegadaEstacion.setMilliseconds(horaActual.getMilliseconds() + restah);
         horallegadaEstacion.setUTCHours(horallegadaEstacion.getHours());
-        let hora = horaActual + Math.trunc((horaSiguiente - horaOrigen) * d1 / d2);
-        //horallegadaEstacion.setUTCDate(horallegadaEstacion);
-        console.log("HORA LLEGADA ESTACION ", idSiguiente, "  :", horallegadaEstacion);
-
+        // let hora = horaActual + Math.trunc((horaSiguiente - horaOrigen) * d1 / d2);
+        //horallegadaEstacion.setUTCDate(horallegadaEstacion.getDate());
+       // console.log("HORA LLEGADA ESTACION ", idSiguiente, "  :", horallegadaEstacion);
+        let resultado = {
+            origen:res.origen,
+            destino: res.destino,
+            idViaje:res.idViaje,
+            recorrido:res.recorrido,
+            horaActual:`${horaActual.getUTCHours()}:${horaActual.getUTCMinutes()}`,
+            horaLLega:`${horallegadaEstacion.getUTCHours()}:${horallegadaEstacion.getUTCMinutes()}`,
+            horaDeberia:`${horaSiguiente.getUTCHours()}:${horaSiguiente.getUTCMinutes()}`,
+            retraso: `${Math.trunc((horallegadaEstacion.getHours()-horaSiguiente.getHours())/3600)}hs ${Math.trunc(horallegadaEstacion.getMinutes()-horaSiguiente.getMinutes())}min`
+        }
         /*
         { res tiene todo esto
             origen:res.idOrigen,
@@ -278,9 +256,8 @@ class ManejadorViajes {
         */
 
         //ESTO ES LA RESPUESTA PARA EL CLIENTE, FORMEAR PARA ENTREGAR SOLO LO NECESARIO
-        return res;
+        return resultado;
     }
-
 
 
     getEstaciones() {
@@ -294,17 +271,17 @@ class ManejadorViajes {
         }
         return estaciones;
     }
+
     //idViajeHorario: id del mapa de ViajesDia
     construirEstacionesNombresConHorarios(idViajeHorario, mapDeViajesDia) {
         let estacionesConHora = [];
         for (let [idEstacion, horaEstacion] of mapDeViajesDia.get(idViajeHorario)) {
-
             estacionesConHora.push([this.getEstaciones().get(idEstacion).nombre, horaEstacion]);
         }
         return estacionesConHora;
     }
-    construirEstacionesSinNombresConHorarios(idViajeHorario, mapDeViajesDia) {
 
+    construirEstacionesSinNombresConHorarios(idViajeHorario, mapDeViajesDia) {
         return mapDeViajesDia.get(idViajeHorario);
     }
 }

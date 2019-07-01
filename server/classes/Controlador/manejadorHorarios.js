@@ -28,7 +28,7 @@ class ManejadorHorarios {
             if (this.estaEnElRango(hora, hora1, hora2) && vecHoras[i + 1][0] === idOrigen) { // si esta en el rango, y es idOrigen es igual a la proxima estacion
 
                 encontrado = true;
-                console.log("i: ", i, " ENCONTRADO: ", encontrado, " LA HORA DE LA ESTACION ANTERIOR es:", hora1, "  LA HORA ACTUAL", hora, "  LA HORA DE LLEGADA ES:", hora2);
+              //  console.log("i: ", i, " ENCONTRADO: ", encontrado, " LA HORA DE LA ESTACION ANTERIOR es:", hora1, "  LA HORA ACTUAL", hora, "  LA HORA DE LLEGADA ES:", hora2);
                 return encontrado;
             }
 
@@ -109,9 +109,9 @@ class ManejadorHorarios {
                 res.tiempoMinimo = tiempoMinimo;
             }
         }
-        console.log(mapMapHorario.get(res.idViaje-1));
-         console.log(mapMapHorario.get(res.idViaje));
-         console.log(mapMapHorario.get(res.idViaje+1));
+       // console.log(mapMapHorario.get(res.idViaje-1));
+       //  console.log(mapMapHorario.get(res.idViaje));
+       //  console.log(mapMapHorario.get(res.idViaje+1));
        // console.log(res);
         return res;
     }
@@ -175,7 +175,7 @@ class ManejadorHorarios {
         dateHora.setUTCHours(parseInt(h), parseInt(m), 0);
         return dateHora;
     }
-    static horaActualUTC() {
+    static horaActualUTC(hora) {
         let fechaActual = new Date();
         fechaActual.setUTCHours(fechaActual.getHours());
         return fechaActual;
