@@ -53,7 +53,7 @@ describe('Test para Caso de Prueba 1', () => {
     })
     
 
-    /*
+    
     it("1.2 - Cliente esta en la estacion", () => {
         let pasajeroEstacion ={
             pasajero: enEstacion, // envio la posicion del cliente
@@ -66,6 +66,4 @@ describe('Test para Caso de Prueba 1', () => {
         //console.log(res.tren);
         
     })
-    */
-
 })
