@@ -15,7 +15,7 @@
   "license": "ISC",
   "dependencies": {
     "@turf/turf": "^5.1.6",
-    "express": "^4.17.1",
+    "express": "^4.17.3",
     "leaflet": "^1.5.1",
     "socket.io": "^2.2.0",
     "sweetalert2": "^8.12.1"
